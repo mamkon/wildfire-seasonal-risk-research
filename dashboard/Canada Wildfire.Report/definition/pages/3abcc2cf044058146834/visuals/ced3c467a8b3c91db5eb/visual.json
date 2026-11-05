@@ -1,0 +1,144 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
+  "name": "ced3c467a8b3c91db5eb",
+  "position": {
+    "x": 744,
+    "y": 454,
+    "width": 522,
+    "height": 165,
+    "z": 5284,
+    "tabOrder": 5284
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Agency"
+                    }
+                  },
+                  "Property": "Agency"
+                }
+              },
+              "queryRef": "Agency.Agency",
+              "nativeQueryRef": "Agency",
+              "active": true
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Agency"
+                        }
+                      },
+                      "Property": "Area (million ha)"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Agency.Area (million ha)",
+              "nativeQueryRef": "Area (million ha)",
+              "active": true
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Agency"
+                        }
+                      },
+                      "Property": "Records"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Agency.Records",
+              "nativeQueryRef": "Records",
+              "active": true
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Aggregation": {
+                "Expression": {
+                  "Column": {
+                    "Expression": {
+                      "SourceRef": {
+                        "Entity": "Agency"
+                      }
+                    },
+                    "Property": "Area (million ha)"
+                  }
+                },
+                "Function": 0
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {},
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Reporting agencies by recorded area'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "15D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

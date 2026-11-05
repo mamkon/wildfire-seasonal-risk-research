@@ -24,7 +24,9 @@ Agencies record small fires differently. I checked how often each agency records
 | **Power BI Desktop** | Built nine report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
 | **Excel** | Packaged summary tables and denominator checks for spreadsheet review. |
 
-Open the [Power BI project](dashboard/Canada%20Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the `.pbip` file. On the first open, select **Refresh now** if Desktop prompts you to load the embedded summaries. The review build uses page tabs and summary tables. The Map page ranks rounded coordinate cells, and record-level slicers and drill-through remain outstanding. The [build guide](powerbi/BUILD_GUIDE.md) describes the full model design.
+Open the [Power BI project](dashboard/Canada%20Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the `.pbip` file. On the first open, select **Refresh now** if Desktop prompts you to load the embedded summaries. The Executive Summary places a Canadian area map beside annual, monthly and cause charts. The map is a fixed view of rounded coordinate cells across the analysis window. The separate Map page ranks those cells. Record-level slicers and drill-through remain outstanding. [Build guide](powerbi/BUILD_GUIDE.md)
+
+The Executive Summary layout draws on the [SAS Visual Analytics wildfire dashboard](https://communities.sas.com/t5/SAS-Visual-Analytics-Gallery/Fighting-the-Amazon-forest-fires-with-advanced-analytics/ta-p/784221). The Canadian boundary layer comes from [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/).
 
 Start with the [data quality notebook](notebooks/01_data_quality_and_coverage.ipynb), then read the [burden analysis](notebooks/02_burden_patterns.ipynb). The [Excel workbook](Canada_Wildfire_Review.xlsx) provides the main figures in tables.
 

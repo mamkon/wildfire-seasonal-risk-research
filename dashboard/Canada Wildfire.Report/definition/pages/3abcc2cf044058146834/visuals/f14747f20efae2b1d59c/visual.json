@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "818c63fc3fc1650f4dd7",
+  "name": "f14747f20efae2b1d59c",
   "position": {
-    "x": 24,
-    "y": 12,
-    "width": 1232,
-    "height": 32,
-    "z": 144,
-    "tabOrder": 144
+    "x": 29,
+    "y": 65,
+    "width": 530,
+    "height": 26,
+    "z": 679,
+    "tabOrder": 679
   },
   "visual": {
     "visualType": "textbox",
@@ -19,12 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "CANADA WILDFIRE RESEARCH  /  EXECUTIVE SUMMARY  /  DRAFT: VERIFY",
+                    "value": "Historical review  ·  2000–2025  ·  12 agencies  ·  DRAFT: VERIFY",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "11pt",
-                      "color": "#E8A33D",
-                      "fontWeight": "bold"
+                      "color": "#F2E6D8"
                     }
                   }
                 ]

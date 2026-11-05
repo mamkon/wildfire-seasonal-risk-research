@@ -5,6 +5,7 @@ import calendar
 import csv
 import hashlib
 import json
+import shutil
 from collections import Counter
 from pathlib import Path
 
@@ -91,7 +92,7 @@ def visual(page, label, kind, x, y, w, h, **properties):
     )
 
 
-def note(page, label, content, x, y, w, h, size=12, color="#F2E6D8", bold=False):
+def note(page, label, content, x, y, w, h, size=12, color="#F2E6D8", bold=False, fill=None):
     paragraphs = [
         {
             "textRuns": [
@@ -121,7 +122,21 @@ def note(page, label, content, x, y, w, h, size=12, color="#F2E6D8", bold=False)
             "padding": [
                 {"properties": {edge: literal("4D") for edge in ("top", "bottom", "left", "right")}}
             ],
-            "background": [{"properties": {"show": literal("true" if h == 100 else "false")}}],
+            "background": [
+                {
+                    "properties": {
+                        "show": literal("true" if fill or h == 100 else "false"),
+                        **(
+                            {
+                                "color": {"solid": {"color": literal(f"'{fill}'")}},
+                                "transparency": literal("0D"),
+                            }
+                            if fill
+                            else {}
+                        ),
+                    }
+                }
+            ],
             "border": [
                 {
                     "properties": {
@@ -189,12 +204,171 @@ def axis_objects():
     } | {"legend": [{"properties": {"labelColor": label_color}}]}
 
 
-CARDS = [
-    ("Concentration", "59% to over 99%\nArea from the largest 3%"),
-    ("Trust", "Recording varies\nExact small sizes differ"),
-    ("Cause", "87% of area\nNatural/lightning class"),
-    ("NT response", "90% of area\nModified + monitored"),
-]
+def executive_page(page):
+    """Lay out the historical summary around a map and compact activity charts."""
+    note(page, "header band", " ", 14, 9, 1252, 93, fill="#5B2619")
+    note(page, "header title", "Canada Wildfire Dashboard", 29, 18, 530, 44, 23, bold=True)
+    note(
+        page,
+        "header scope",
+        "Historical review  ·  2000–2025  ·  12 agencies  ·  DRAFT: VERIFY",
+        29,
+        65,
+        530,
+        26,
+        11,
+        "#F2E6D8",
+    )
+    for i, (label, value) in enumerate(
+        [
+            ("FIRE RECORDS", "168,276"),
+            ("RECORDED AREA", "83.99M ha"),
+            ("PEAK MONTH", "July"),
+            ("AGENCY RANGE", "59% to over 99%"),
+        ]
+    ):
+        x = 554 + 173 * i
+        note(page, label, label, x, 22, 165, 25, 9, "#FFD291", True)
+        note(page, value, value, x, 48, 165, 39, 15, bold=True)
+
+    chart(
+        page,
+        "Annual area and five-year mean (million ha)",
+        "lineChart",
+        "Annual",
+        {
+            "Category": fields(("Year", False)),
+            "Y": fields(("Area (million ha)", True), ("Five-year mean (million ha)", True)),
+            "Tooltips": fields(("Records", True)),
+        },
+        x=14,
+        y=113,
+        w=716,
+        h=258,
+        sort=("Year", False, "Ascending"),
+    )
+    chart(
+        page,
+        "Records by month",
+        "columnChart",
+        "Season",
+        {
+            "Category": fields(("Month", False)),
+            "Y": fields(("Records", True)),
+        },
+        x=14,
+        y=385,
+        w=351,
+        h=234,
+        sort=("Month", False, "Ascending"),
+    )
+    chart(
+        page,
+        "Record share and area share (%)",
+        "clusteredBarChart",
+        "Cause",
+        {
+            "Category": fields(("Cause", False)),
+            "Y": fields(("Record share (%)", True), ("Area share (%)", True)),
+        },
+        x=379,
+        y=385,
+        w=351,
+        h=234,
+    )
+    visual(
+        page,
+        "geography",
+        "image",
+        744,
+        113,
+        522,
+        327,
+        objects={
+            "general": [
+                {
+                    "properties": {
+                        "imageUrl": {
+                            "expr": {
+                                "ResourcePackageItem": {
+                                    "PackageName": "RegisteredResources",
+                                    "PackageType": 1,
+                                    "ItemName": "CanadaRecordedArea.png",
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+        },
+        visualContainerObjects={
+            "title": [{"properties": {"show": literal("false")}}],
+            "padding": [
+                {"properties": {edge: literal("0D") for edge in ("top", "bottom", "left", "right")}}
+            ],
+        },
+    )
+    chart(
+        page,
+        "Reporting agencies by recorded area",
+        "tableEx",
+        "Agency",
+        {
+            "Values": fields(("Agency", False), ("Area (million ha)", True), ("Records", True)),
+        },
+        x=744,
+        y=454,
+        w=522,
+        h=165,
+        sort=("Area (million ha)", True, "Descending"),
+    )
+    note(
+        page,
+        "peak",
+        "2023 peak: 17.61 million ha · pending NFD reconciliation. July: 42,235 records with known month.",
+        18,
+        628,
+        1244,
+        32,
+        12,
+        "#E8A33D",
+        True,
+    )
+    note(
+        page,
+        "context",
+        "Agency range refers to area share from the largest 3% of records within each agency. Counts are database records. Area sums recorded fire sizes.",
+        18,
+        664,
+        1244,
+        28,
+        10,
+        "#C8A99A",
+    )
+    note(
+        page,
+        "sources",
+        "Data: NRCan Canadian National Fire Database  ·  Map: Natural Earth  ·  Layout reference: SAS Visual Analytics Gallery",
+        18,
+        691,
+        1244,
+        25,
+        9,
+        "#C8A99A",
+    )
+
+
+def add_executive_map():
+    image = ROOT / "images/executive_recorded_area.png"
+    destination = REPORT / "StaticResources/RegisteredResources/CanadaRecordedArea.png"
+    shutil.copy2(image, destination)
+    report_file = DEFINITION / "report.json"
+    report = json.loads(report_file.read_text(encoding="utf-8-sig"))
+    package = next(p for p in report["resourcePackages"] if p["name"] == "RegisteredResources")
+    name = destination.name
+    if not any(item["name"] == name for item in package["items"]):
+        package["items"].append({"name": name, "path": name, "type": "Image"})
+    write(report_file, report)
 
 
 def fields(*pairs):
@@ -434,6 +608,10 @@ def main():
             height=720,
             width=1280,
         )
+        if nav == "Executive Summary":
+            executive_page(page)
+            add_executive_map()
+            continue
         note(
             page,
             "kicker",
@@ -461,8 +639,8 @@ def main():
         if nav == "NT Response":
             scope = "2000–2025  •  Northwest Territories reporting agency only  •  Unknown stays in both denominators."
         note(page, "scope", scope, 24, 108, 1232, 38, 12, "#C8A99A")
-        if nav in ("Executive Summary", "Change"):
-            top = 260 if nav == "Executive Summary" else 160
+        if nav == "Change":
+            top = 160
             chart(
                 page,
                 "Annual area and five-year mean (million ha)",
@@ -489,39 +667,15 @@ def main():
                 "#E8A33D",
                 True,
             )
-            if nav == "Change":
-                note(
-                    page,
-                    "sensitivity",
-                    "2020–2025 mean: 6.26M ha per year. Excluding 2023: 3.99M ha. 2000s: 1.74M ha. 2010s: 2.91M ha. Reporting changes and unequal periods limit comparisons.",
-                    24,
-                    643,
-                    1232,
-                    60,
-                )
-            else:
-                for i, (label, answer) in enumerate(CARDS):
-                    note(
-                        page,
-                        label,
-                        label.upper() + "\n" + answer,
-                        24 + i * 312,
-                        155,
-                        296,
-                        100,
-                        12,
-                        "#F2E6D8",
-                        True,
-                    )
-                note(
-                    page,
-                    "context",
-                    "168,276 records  •  83.99 million ha  •  Natural Resources Canada, Canadian National Fire Database",
-                    24,
-                    647,
-                    1232,
-                    40,
-                )
+            note(
+                page,
+                "sensitivity",
+                "2020–2025 mean: 6.26M ha per year. Excluding 2023: 3.99M ha. 2000s: 1.74M ha. 2010s: 2.91M ha. Reporting changes and unequal periods limit comparisons.",
+                24,
+                643,
+                1232,
+                60,
+            )
         elif nav == "Concentration":
             chart(
                 page,

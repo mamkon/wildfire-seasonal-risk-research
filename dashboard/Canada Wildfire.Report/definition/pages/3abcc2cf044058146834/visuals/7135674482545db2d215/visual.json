@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "7135674482545db2d215",
   "position": {
-    "x": 24,
-    "y": 260,
-    "width": 1232,
-    "height": 335,
-    "z": 2624,
-    "tabOrder": 2624
+    "x": 14,
+    "y": 113,
+    "width": 716,
+    "height": 258,
+    "z": 1144,
+    "tabOrder": 1144
   },
   "visual": {
     "visualType": "lineChart",
@@ -120,48 +120,6 @@
       }
     },
     "drillFilterOtherVisuals": true,
-    "visualContainerObjects": {
-      "title": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'Annual area and five-year mean (million ha)'"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "border": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "radius": {
-              "expr": {
-                "Literal": {
-                  "Value": "15D"
-                }
-              }
-            }
-          }
-        }
-      ]
-    },
     "objects": {
       "categoryAxis": [
         {
@@ -222,6 +180,48 @@
                       "Value": "'#C8A99A'"
                     }
                   }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Annual area and five-year mean (million ha)'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "15D"
                 }
               }
             }

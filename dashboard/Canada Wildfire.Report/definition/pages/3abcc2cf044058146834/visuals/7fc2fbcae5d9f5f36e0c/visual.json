@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "a76b6d39118fddf0cced",
+  "name": "7fc2fbcae5d9f5f36e0c",
   "position": {
-    "x": 648,
-    "y": 155,
-    "width": 296,
-    "height": 100,
-    "z": 2198,
-    "tabOrder": 2198
+    "x": 900,
+    "y": 48,
+    "width": 165,
+    "height": 39,
+    "z": 1380,
+    "tabOrder": 1380
   },
   "visual": {
     "visualType": "textbox",
@@ -19,36 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "CAUSE",
+                    "value": "July",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "87% of area",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Natural/lightning class",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
+                      "fontSize": "15pt",
                       "color": "#F2E6D8",
                       "fontWeight": "bold"
                     }
@@ -101,7 +75,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -114,7 +88,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

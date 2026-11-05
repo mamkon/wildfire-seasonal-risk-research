@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "8c50239d255924d4c6d7",
+  "name": "0fc1b5012598da6f07e5",
   "position": {
-    "x": 336,
-    "y": 155,
-    "width": 296,
-    "height": 100,
-    "z": 1886,
-    "tabOrder": 1886
+    "x": 727,
+    "y": 22,
+    "width": 165,
+    "height": 25,
+    "z": 947,
+    "tabOrder": 947
   },
   "visual": {
     "visualType": "textbox",
@@ -19,37 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "TRUST",
+                    "value": "RECORDED AREA",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Recording varies",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Exact small sizes differ",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
+                      "fontSize": "9pt",
+                      "color": "#FFD291",
                       "fontWeight": "bold"
                     }
                   }
@@ -101,7 +75,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -114,7 +88,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

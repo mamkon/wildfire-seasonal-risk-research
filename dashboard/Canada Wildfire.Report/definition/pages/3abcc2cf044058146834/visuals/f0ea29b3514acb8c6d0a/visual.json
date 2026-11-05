@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "f0ea29b3514acb8c6d0a",
   "position": {
-    "x": 24,
-    "y": 647,
-    "width": 1232,
-    "height": 40,
-    "z": 6494,
-    "tabOrder": 6494
+    "x": 18,
+    "y": 664,
+    "width": 1244,
+    "height": 28,
+    "z": 6658,
+    "tabOrder": 6658
   },
   "visual": {
     "visualType": "textbox",
@@ -19,11 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "168,276 records  •  83.99 million ha  •  Natural Resources Canada, Canadian National Fire Database",
+                    "value": "Agency range refers to area share from the largest 3% of records within each agency. Counts are database records. Area sums recorded fire sizes.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8"
+                      "fontSize": "10pt",
+                      "color": "#C8A99A"
                     }
                   }
                 ]

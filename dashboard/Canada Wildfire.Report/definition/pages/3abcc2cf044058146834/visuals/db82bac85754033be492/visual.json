@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "b1ba4f9eb098c0832a4e",
+  "name": "db82bac85754033be492",
   "position": {
-    "x": 24,
-    "y": 48,
-    "width": 1232,
-    "height": 56,
-    "z": 504,
-    "tabOrder": 504
+    "x": 900,
+    "y": 22,
+    "width": 165,
+    "height": 25,
+    "z": 1120,
+    "tabOrder": 1120
   },
   "visual": {
     "visualType": "textbox",
@@ -19,11 +19,11 @@
               {
                 "textRuns": [
                   {
-                    "value": "Large events matter, and recording differences matter too.",
+                    "value": "PEAK MONTH",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "21pt",
-                      "color": "#F2E6D8",
+                      "fontSize": "9pt",
+                      "color": "#FFD291",
                       "fontWeight": "bold"
                     }
                   }

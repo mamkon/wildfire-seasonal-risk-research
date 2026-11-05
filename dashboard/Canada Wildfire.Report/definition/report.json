@@ -29,6 +29,11 @@
           "name": "Ember.json",
           "path": "Ember.json",
           "type": "CustomTheme"
+        },
+        {
+          "name": "CanadaRecordedArea.png",
+          "path": "CanadaRecordedArea.png",
+          "type": "Image"
         }
       ]
     },

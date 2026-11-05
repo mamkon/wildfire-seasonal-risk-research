@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "c677d713489f7a1498c2",
+  "name": "d96098be78a83e2e01fe",
   "position": {
-    "x": 960,
-    "y": 155,
-    "width": 296,
-    "height": 100,
-    "z": 2510,
-    "tabOrder": 2510
+    "x": 29,
+    "y": 18,
+    "width": 530,
+    "height": 44,
+    "z": 209,
+    "tabOrder": 209
   },
   "visual": {
     "visualType": "textbox",
@@ -19,36 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "NT RESPONSE",
+                    "value": "Canada Wildfire Dashboard",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "90% of area",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
-                      "color": "#F2E6D8",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ]
-              },
-              {
-                "textRuns": [
-                  {
-                    "value": "Modified + monitored",
-                    "textStyle": {
-                      "fontFamily": "Segoe UI",
-                      "fontSize": "12pt",
+                      "fontSize": "23pt",
                       "color": "#F2E6D8",
                       "fontWeight": "bold"
                     }
@@ -101,7 +75,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -114,7 +88,7 @@
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },
