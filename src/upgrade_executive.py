@@ -3,7 +3,11 @@
 import argparse
 import json
 import sqlite3
+from collections import defaultdict
 from pathlib import Path
+
+import numpy as np
+from matplotlib.path import Path as PolygonPath
 
 from src import build_desktop_report as pbi
 
@@ -104,6 +108,40 @@ def nav(page, current):
         button(page, label, destination, 14 + 176 * i, 166, label == current)
 
 
+def map_slicers(page, x):
+    for name, width in [("Province or territory", 300), ("Year", 210)]:
+        pbi.visual(
+            page,
+            "Map filter " + name,
+            "slicer",
+            x,
+            158,
+            width,
+            76,
+            query={"queryState": {"Values": {"projections": [field("Map Cells", name)]}}},
+            syncGroup={"groupName": "Map " + name, "fieldChanges": True, "filterChanges": True},
+            objects={
+                "data": properties(mode="'Dropdown'"),
+                "header": [
+                    {
+                        "properties": {
+                            "show": pbi.literal("true"),
+                            "text": pbi.literal(f"'{name}'"),
+                            "fontColor": color(CREAM),
+                        }
+                    }
+                ],
+                "items": [{"properties": {"fontColor": color(CREAM)}}],
+            },
+            visualContainerObjects={
+                "padding": properties(top="6D", bottom="6D", left="8D", right="8D"),
+                "title": properties(show="false"),
+                "border": properties(show="true", radius="15D"),
+            },
+        )
+        x += width + 12
+
+
 def azure_map(page, mode, bounds):
     title = {
         "Fire Locations": "Reported area by location",
@@ -193,8 +231,13 @@ def executive(page):
             {
                 "value": [
                     {
-                        "properties": {"fontSize": pbi.literal("12D" if name == "Latest report date" else "15D"),
-                                       "fontColor": color(CREAM), "labelDisplayUnits": pbi.literal("1D")},
+                        "properties": {
+                            "fontSize": pbi.literal(
+                                "12D" if name == "Latest report date" else "15D"
+                            ),
+                            "fontColor": color(CREAM),
+                            "labelDisplayUnits": pbi.literal("1D"),
+                        },
                         "selector": {"id": "default"},
                     }
                 ],
@@ -206,7 +249,9 @@ def executive(page):
                 ],
                 "padding": properties(paddingUniform="2D"),
                 "layout": properties(paddingUniform="0D"),
-                "outline": [{"properties": {"show": pbi.literal("false")}, "selector": {"id": "default"}}],
+                "outline": [
+                    {"properties": {"show": pbi.literal("false")}, "selector": {"id": "default"}}
+                ],
             },
             show_title=True,
         )
@@ -243,7 +288,9 @@ def executive(page):
             {
                 "dataPoint": [{"properties": {"fill": color("#D9622B"), "target": color(AMBER)}}],
                 "labels": [{"properties": {"color": color(CREAM)}}],
-                "calloutValue": [{"properties": {"color": color(CREAM), "labelDisplayUnits": pbi.literal("1D")}}],
+                "calloutValue": [
+                    {"properties": {"color": color(CREAM), "labelDisplayUnits": pbi.literal("1D")}}
+                ],
                 "target": [{"properties": {"color": color(AMBER)}}],
             },
         )
@@ -276,7 +323,8 @@ def executive(page):
         h=129,
         sort=("Month", False, "Ascending"),
     )
-    azure_map(page, VIEWS[0], (742, 158, 524, 334))
+    map_slicers(page, 742)
+    azure_map(page, VIEWS[0], (742, 242, 524, 250))
     pbi.chart(
         page,
         "Reporting agencies by recorded area",
@@ -306,7 +354,7 @@ def executive(page):
     pbi.note(
         page,
         "scope note",
-        "2023 total pending NFD reconciliation. The donut measures cause coding. Map points represent rounded cells.",
+        "2023 total pending NFD reconciliation. The donut measures cause coding. Map filters apply to rounded cells only.",
         15,
         687,
         1250,
@@ -330,7 +378,8 @@ def map_page(label):
     header(page, label, "Historical review · 2000–2025 · 12 reporting agencies")
     nav(page, label)
     if label in VIEWS[1:3]:
-        azure_map(page, label, (14, 158, 1252, 482))
+        map_slicers(page, 14)
+        azure_map(page, label, (14, 242, 1252, 398))
         details = {
             "Fire Hotspots": "Colour intensity weights rounded cells by recorded area. Use it to identify where historical area is concentrated.",
             "Fire Clusters": "Zoom to split groups of nearby cells. Cluster counts refer to cells. Use the groups to choose areas for closer review.",
@@ -346,6 +395,46 @@ def map_page(label):
     return page
 
 
+def geographic_grid(db):
+    records = db.execute("""
+        SELECT grid_cell, longitude, latitude, year_key, size_ha
+        FROM fact_fire WHERE in_analysis = 1 AND grid_cell IS NOT NULL
+        ORDER BY fire_key
+    """).fetchall()
+    points = np.array([(lon, lat) for _, lon, lat, _, _ in records])
+    provinces = np.full(len(records), "Unassigned", dtype=object)
+    boundary_path = pbi.ROOT / "data/reference/natural_earth_canada_admin1.json"
+    for boundary in json.loads(boundary_path.read_text(encoding="utf-8")):
+        geometry = boundary["geometry"]
+        polygons = geometry["coordinates"]
+        if geometry["type"] == "Polygon":
+            polygons = [polygons]
+        for exterior, *holes in polygons:
+            xs, ys = np.asarray(exterior).T
+            candidates = np.flatnonzero(
+                (points[:, 0] >= xs.min())
+                & (points[:, 0] <= xs.max())
+                & (points[:, 1] >= ys.min())
+                & (points[:, 1] <= ys.max())
+            )
+            inside = PolygonPath(exterior).contains_points(points[candidates])
+            for hole in holes:
+                inside &= ~PolygonPath(hole).contains_points(points[candidates])
+            matched = candidates[inside]
+            overlap = matched[provinces[matched] != "Unassigned"]
+            provinces[matched] = boundary["name"]
+            provinces[overlap] = "Unassigned"
+
+    totals = defaultdict(lambda: [0, 0.0])
+    for (cell, _, _, year, area), province in zip(records, provinces, strict=True):
+        totals[cell, province, year][0] += 1
+        totals[cell, province, year][1] += area
+    return [
+        (cell, *map(int, cell.split("_")), province, year, count, area)
+        for (cell, province, year), (count, area) in sorted(totals.items())
+    ]
+
+
 def model_tables(path):
     database = pbi.ROOT / "data/warehouse/wildfire.db"
     with sqlite3.connect(f"{database.resolve().as_uri()}?mode=ro", uri=True) as db:
@@ -354,6 +443,7 @@ def model_tables(path):
             FROM fact_fire WHERE in_analysis = 1""").fetchone()
         known_months = db.execute("""SELECT month_key, COUNT(*) FROM fact_fire
             WHERE in_analysis = 1 AND month_key BETWEEN 1 AND 12 GROUP BY month_key""").fetchall()
+        grid = geographic_grid(db)
     assert count == 168276 and round(area, 2) == 83988359.25
     assert dict(known_months)[7] == 42235 and max(known_months, key=lambda row: row[1])[0] == 7
     assert last_date and last_date.startswith("2025-")
@@ -367,16 +457,9 @@ def model_tables(path):
         for row in pbi.rows("review_tables/causes.csv")
         if row["cause_class"] == "Unknown"
     )
-    grid = [
-        (
-            row["grid_cell"],
-            *map(int, row["grid_cell"].split("_")),
-            int(row["reported_records"]),
-            float(row["area_ha"]),
-        )
-        for row in pbi.rows("warehouse_exports/vw_grid.csv")
-    ]
-    assert len(grid) == 1121 and sum(row[3] for row in grid) == count - 207
+    assert len({row[0] for row in grid}) == 1121
+    assert sum(row[5] for row in grid) == count - 207
+    assert {row[4] for row in grid} == set(range(2000, 2026))
     pbi.TABLES.clear()
     pbi.table(
         "Map Cells",
@@ -384,6 +467,8 @@ def model_tables(path):
             ("Cell", "string"),
             ("Latitude", "double"),
             ("Longitude", "double"),
+            ("Province or territory", "string"),
+            ("Year", "int64"),
             ("Records", "int64"),
             ("Area (ha)", "double"),
         ],

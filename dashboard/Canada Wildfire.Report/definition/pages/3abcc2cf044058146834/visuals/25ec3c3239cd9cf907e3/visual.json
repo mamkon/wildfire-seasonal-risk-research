@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2023 total pending NFD reconciliation. The donut measures cause coding. Map points represent rounded cells.",
+                    "value": "2023 total pending NFD reconciliation. The donut measures cause coding. Map filters apply to rounded cells only.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

@@ -1,8 +1,14 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "64fbd995d3b6b156ee26",
   "displayName": "Change",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280
+  "width": 1280,
+  "pageBinding": {
+    "name": "e443c1f183630003dc40",
+    "type": "Default",
+    "parameters": [],
+    "referenceScope": "CrossReport"
+  }
 }

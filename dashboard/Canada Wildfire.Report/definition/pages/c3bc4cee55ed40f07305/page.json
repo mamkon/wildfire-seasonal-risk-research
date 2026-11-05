@@ -1,8 +1,14 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
   "name": "c3bc4cee55ed40f07305",
   "displayName": "Concentration",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280
+  "width": 1280,
+  "pageBinding": {
+    "name": "66aad300804abe02ca95",
+    "type": "Default",
+    "parameters": [],
+    "referenceScope": "CrossReport"
+  }
 }

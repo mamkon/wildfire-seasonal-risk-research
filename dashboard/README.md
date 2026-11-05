@@ -6,7 +6,7 @@ This review build uses the 2000–2025 CNFDB analysis of 12 reporting agencies. 
 
 Fire Locations, Fire Hotspots and Fire Clusters use Azure Maps with 1,121 rounded coordinate cells. Marker size and heat intensity use recorded area. Cluster counts refer to grouped cells. There are 207 records outside the mapped set. Azure Maps availability depends on the tenant and its network access. The separate Map page ranks the 20 cells with the most recorded area.
 
-Forest Watch and Carbon Flux identify the additional datasets needed to show those measures. Record-level slicers and drill-through remain outstanding. Headlines are marked for review.
+Forest Watch and Carbon Flux identify the additional datasets needed to show those measures. Province or territory and Year dropdowns filter the three Azure Maps views. The executive KPIs retain the full study scope. Geographic labels use the original coordinates and Natural Earth province and territory boundaries, before locations are grouped into rounded cells. Unassigned means a point did not match those boundaries. Headlines are marked for review.
 
 The Executive Summary layout draws on the [SAS Visual Analytics wildfire dashboard](https://communities.sas.com/t5/SAS-Visual-Analytics-Gallery/Fighting-the-Amazon-forest-fires-with-advanced-analytics/ta-p/784221). [Microsoft Azure Maps layer documentation](https://learn.microsoft.com/en-us/azure/azure-maps/power-bi-visual-understanding-layers)
 
