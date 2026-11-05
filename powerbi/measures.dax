@@ -1,0 +1,707 @@
+// Create each measure individually in the model. This is not a DAX query script.
+// Order: detail-page calculations first; Executive Summary references these last.
+// Tables: imported facts/dimensions only. No SQL reference view is imported.
+
+// Reference: vw_kpi_summary.reported_records
+// Model format: #,0
+Total Records =
+VAR Result = CALCULATE(COUNTROWS(fact_fire), KEEPFILTERS(fact_fire[in_analysis] = 1))
+RETURN Result
+
+// Reference: vw_kpi_summary.area_ha
+// Model format: #,0.00
+Total Area Ha =
+VAR Result = CALCULATE(SUM(fact_fire[size_ha]), KEEPFILTERS(fact_fire[in_analysis] = 1))
+RETURN Result
+
+// Reference: vw_kpi_summary.mean_size_ha
+// Model format: 0.00
+Mean Size Ha =
+VAR Area = [Total Area Ha]
+VAR Records = [Total Records]
+RETURN DIVIDE(Area, Records)
+
+// Reference: vw_kpi_summary.median_size_ha
+// Model format: 0.00
+Median Size Ha =
+VAR Result = CALCULATE(MEDIAN(fact_fire[size_ha]), KEEPFILTERS(fact_fire[in_analysis] = 1))
+RETURN Result
+
+// Reference: vw_kpi_summary.large_fire_records
+// Model format: #,0
+Large Fire Records =
+VAR Result = CALCULATE([Total Records], KEEPFILTERS(fact_fire[is_large_fire] = 1))
+RETURN Result
+
+// Reference: vw_kpi_summary.large_fire_share
+// Model format: 0.0000%
+Large Fire Share =
+VAR Large = [Large Fire Records]
+RETURN DIVIDE(Large, [Total Records])
+
+// Reference: vw_concentration.area_share; top_pct=3
+// Model format: 0.0000%
+Area Share Top 3 Percent =
+VAR Eligible = CALCULATETABLE(
+    SELECTCOLUMNS(fact_fire, "FireKey", fact_fire[fire_key], "Area", fact_fire[size_ha]),
+    KEEPFILTERS(fact_fire[in_analysis] = 1))
+VAR N = COUNTROWS(Eligible)
+VAR K = ROUNDUP(N * 0.03, 0)
+VAR Largest = TOPN(K, Eligible, [Area], DESC, [FireKey], ASC)
+RETURN IF(N = 0, BLANK(), DIVIDE(SUMX(Largest, [Area]), SUMX(Eligible, [Area])))
+
+// Reference: vw_concentration.ALL at default scope
+// Model format: 0.0000%
+Pooled Top 3 Reference =
+VAR Result = CALCULATE([Area Share Top 3 Percent], ALLSELECTED(dim_agency))
+RETURN Result
+
+// Reference: MIN agency shares excluding ALL
+// Model format: 0.0000%
+Agency Top 3 Minimum =
+VAR Agencies = FILTER(ALLSELECTED(dim_agency), CALCULATE([Total Records]) > 0)
+RETURN MINX(Agencies, CALCULATE([Area Share Top 3 Percent]))
+
+// Reference: MAX agency shares excluding ALL
+// Model format: 0.0000%
+Agency Top 3 Maximum =
+VAR Agencies = FILTER(ALLSELECTED(dim_agency), CALCULATE([Total Records]) > 0)
+RETURN MAXX(Agencies, CALCULATE([Area Share Top 3 Percent]))
+
+// Reference: review_tables/heaping strict counts
+// Model format: #,0
+Exact Size Records =
+VAR SizePoint = SELECTEDVALUE(size_points[size_value])
+RETURN IF(ISBLANK(SizePoint), BLANK(), CALCULATE([Total Records], KEEPFILTERS(fact_fire[size_ha] = SizePoint)))
+
+// Reference: review_tables/heaping strict shares
+// Model format: 0.0000%
+Exact Size Share =
+VAR N = [Exact Size Records]
+RETURN DIVIDE(N, [Total Records])
+
+// Reference: review_tables/heaping near-value counts; diagnostic only
+// Model format: #,0
+Near Size Records =
+VAR SizePoint = SELECTEDVALUE(size_points[size_value])
+VAR Eligible = CALCULATETABLE(fact_fire, KEEPFILTERS(fact_fire[in_analysis] = 1))
+RETURN IF(ISBLANK(SizePoint), BLANK(), COUNTROWS(FILTER(Eligible, ABS(fact_fire[size_ha] - SizePoint) <= 0.00000001)))
+
+// Reference: vw_quality_trend.source_records; default fixed-agency period
+// Model format: #,0
+Source Records =
+VAR Result = CALCULATE(COUNTROWS(fact_fire), REMOVEFILTERS(fact_fire[in_analysis]),
+    KEEPFILTERS(dim_year[year_key] >= 2000), KEEPFILTERS(dim_year[year_key] <= 2025),
+    KEEPFILTERS(dim_agency[agency_code] <> "PE"))
+RETURN Result
+
+// Reference: vw_kpi_summary.unknown_cause_share
+// Model format: 0.0000%
+Unknown Cause Share =
+VAR UnknownRecords = CALCULATE([Total Records], KEEPFILTERS(dim_cause[cause_class] = "Unknown"))
+RETURN DIVIDE(UnknownRecords, [Total Records])
+
+// Reference: vw_kpi_summary.missing_report_date_share
+// Model format: 0.0000%
+Missing Report Date Share =
+VAR MissingRecords = CALCULATE([Total Records], KEEPFILTERS(fact_fire[missing_report_date] = 1))
+RETURN DIVIDE(MissingRecords, [Total Records])
+
+// Reference: vw_quality_trend.unknown_cause_share
+// Model format: 0.0000%
+Source Unknown Cause Share =
+VAR N = CALCULATE([Source Records], KEEPFILTERS(dim_cause[cause_class] = "Unknown"))
+RETURN DIVIDE(N, [Source Records])
+
+// Reference: vw_quality_trend.missing_report_date_share
+// Model format: 0.0000%
+Source Missing Date Share =
+VAR N = CALCULATE([Source Records], KEEPFILTERS(fact_fire[missing_report_date] = 1))
+RETURN DIVIDE(N, [Source Records])
+
+// Reference: Pending external evidence; never zero-filled
+// Model format: 0.0000%
+NFD Reconciliation Gap =
+VAR Result = BLANK()
+RETURN Result
+
+// Reference: fact_nfd_annual is empty
+// Model format: text
+NFD Reconciliation Status =
+VAR StatusText = "NFD reconciliation: pending; official matched totals not yet available"
+RETURN StatusText
+
+// Reference: vw_annual_trend.area_ha; full years
+// Model format: #,0.00
+Annual Area Ha =
+VAR Result = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month))
+RETURN Result
+
+// Reference: vw_annual_trend.reported_records
+// Model format: #,0
+Annual Records =
+VAR Result = CALCULATE([Total Records], REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month))
+RETURN Result
+
+// Reference: vw_annual_trend.yoy_area_change
+// Model format: 0.0000%
+YoY Area Change =
+VAR Y = SELECTEDVALUE(dim_year[year_key])
+VAR CurrentArea = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_year), REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month), dim_year[year_key] = Y)
+VAR PriorArea = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_year), REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month), dim_year[year_key] = Y - 1)
+RETURN IF(ISBLANK(Y) || Y <= 2000 || Y > 2025 || ISBLANK(CurrentArea) || ISBLANK(PriorArea), BLANK(), DIVIDE(CurrentArea - PriorArea, PriorArea))
+
+// Reference: vw_annual_trend.five_year_mean_area
+// Model format: #,0.00
+Five Year Rolling Area Ha =
+VAR Y = SELECTEDVALUE(dim_year[year_key])
+VAR WindowYears = GENERATESERIES(Y - 4, Y, 1)
+VAR AnnualValues = ADDCOLUMNS(WindowYears, "AnnualArea",
+    VAR WY = [Value]
+    RETURN CALCULATE([Total Area Ha], REMOVEFILTERS(dim_year), REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month), dim_year[year_key] = WY))
+VAR PopulatedYears = COUNTROWS(FILTER(AnnualValues, NOT ISBLANK([AnnualArea])))
+RETURN IF(ISBLANK(Y) || Y < 2004 || Y > 2025 || PopulatedYears <> 5, BLANK(), AVERAGEX(AnnualValues, [AnnualArea]))
+
+// Reference: vw_decades.years_observed
+// Model format: #,0
+Observed Years =
+VAR Years = FILTER(VALUES(dim_year[year_key]), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025)
+RETURN COUNTROWS(FILTER(Years, CALCULATE([Annual Records]) > 0))
+
+// Reference: vw_decades.mean_annual_area
+// Model format: #,0.00
+Mean Annual Area Ha =
+VAR Result = DIVIDE([Annual Area Ha], [Observed Years])
+RETURN Result
+
+// Reference: review_tables/decade_sensitivity mean
+// Model format: #,0.00
+Mean Annual Area Without 2023 Ha =
+VAR Result = CALCULATE([Mean Annual Area Ha], KEEPFILTERS(dim_year[year_key] <> 2023))
+RETURN Result
+
+// Reference: Presentation status, not numeric validation
+// Model format: text
+Area Reconciliation Note =
+VAR NoteText = "2023 total: pending NFD reconciliation"
+RETURN NoteText
+
+// Reference: vw_cause.count_share; also pooled cause table
+// Model format: 0.0000%
+Cause Record Share =
+VAR Denominator = CALCULATE([Total Records], REMOVEFILTERS(dim_cause))
+RETURN DIVIDE([Total Records], Denominator)
+
+// Reference: vw_cause.area_share; also pooled cause table
+// Model format: 0.0000%
+Cause Area Share =
+VAR Denominator = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_cause))
+RETURN DIVIDE([Total Area Ha], Denominator)
+
+// Reference: review_tables/causes Natural/lightning
+// Model format: 0.0000%
+Natural Cause Record Share =
+VAR N = CALCULATE([Total Records], REMOVEFILTERS(dim_cause), dim_cause[cause_code] = "N")
+VAR D = CALCULATE([Total Records], REMOVEFILTERS(dim_cause))
+RETURN DIVIDE(N, D)
+
+// Reference: review_tables/causes Natural/lightning
+// Model format: 0.0000%
+Natural Cause Area Share =
+VAR N = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_cause), dim_cause[cause_code] = "N")
+VAR D = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_cause))
+RETURN DIVIDE(N, D)
+
+// Reference: review_tables/causes Human
+// Model format: 0.0000%
+Human Cause Record Share =
+VAR N = CALCULATE([Total Records], REMOVEFILTERS(dim_cause), dim_cause[cause_code] = "H")
+VAR D = CALCULATE([Total Records], REMOVEFILTERS(dim_cause))
+RETURN DIVIDE(N, D)
+
+// Reference: review_tables/nt_response record denominator
+// Model format: #,0
+NT Records =
+VAR Result = CALCULATE([Total Records], KEEPFILTERS(dim_agency[agency_code] = "NT"))
+RETURN Result
+
+// Reference: review_tables/nt_response area denominator
+// Model format: #,0.00
+NT Area Ha =
+VAR Result = CALCULATE([Total Area Ha], KEEPFILTERS(dim_agency[agency_code] = "NT"))
+RETURN Result
+
+// Reference: review_tables/nt_response.record_share
+// Model format: 0.0000%
+NT Response Record Share =
+VAR D = CALCULATE([NT Records], REMOVEFILTERS(dim_response))
+RETURN DIVIDE([NT Records], D)
+
+// Reference: review_tables/nt_response.area_share
+// Model format: 0.0000%
+NT Response Area Share =
+VAR D = CALCULATE([NT Area Ha], REMOVEFILTERS(dim_response))
+RETURN DIVIDE([NT Area Ha], D)
+
+// Reference: MON+MOD area / all NT selected area, including Unknown
+// Model format: 0.0000%
+NT Monitored Modified Area Share =
+VAR N = CALCULATE([NT Area Ha], REMOVEFILTERS(dim_response), dim_response[response_code] IN {"MON", "MOD"})
+VAR D = CALCULATE([NT Area Ha], REMOVEFILTERS(dim_response))
+RETURN DIVIDE(N, D)
+
+// Reference: Selected NT populated standard-class record share
+// Model format: 0.0000%
+NT Classification Population =
+VAR N = CALCULATE([NT Records], REMOVEFILTERS(dim_response), dim_response[response_code] IN {"FUL", "MON", "MOD"})
+VAR D = CALCULATE([NT Records], REMOVEFILTERS(dim_response))
+RETURN DIVIDE(N, D)
+
+// Reference: Sum vw_seasonality valid months
+// Model format: #,0
+Valid Month Records =
+VAR Result = CALCULATE([Total Records], KEEPFILTERS(dim_month[month_key] >= 1))
+RETURN Result
+
+// Reference: vw_seasonality month_num=-1
+// Model format: #,0
+Unknown Month Records =
+VAR Result = CALCULATE([Total Records], REMOVEFILTERS(dim_month), dim_month[month_key] = -1)
+RETURN Result
+
+// Reference: Valid-month record distribution
+// Model format: 0.0000%
+Monthly Record Share =
+VAR D = CALCULATE([Valid Month Records], REMOVEFILTERS(dim_month))
+RETURN DIVIDE([Valid Month Records], D)
+
+// Reference: SUM vw_grid.area_ha
+// Model format: #,0.00
+Mapped Area Ha =
+VAR Result = CALCULATE([Total Area Ha], KEEPFILTERS(dim_grid[grid_cell] <> "Unknown"))
+RETURN Result
+
+// Reference: Selected records with grid_cell NULL
+// Model format: #,0
+Unmappable Records =
+VAR Result = CALCULATE([Total Records], REMOVEFILTERS(dim_grid), dim_grid[grid_cell] = "Unknown")
+RETURN Result
+
+// Reference: Top five vw_grid.area_ha / mapped area
+// Model format: 0.0000%
+Mapped Top Five Cell Share =
+VAR Cells = FILTER(ALLSELECTED(dim_grid), dim_grid[grid_cell] <> "Unknown")
+VAR Areas = ADDCOLUMNS(Cells, "CellArea", CALCULATE([Total Area Ha]))
+VAR Largest = TOPN(5, Areas, [CellArea], DESC, dim_grid[grid_cell], ASC)
+RETURN DIVIDE(SUMX(Largest, [CellArea]), SUMX(Areas, [CellArea]))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Large Fire Share Label =
+VAR P = [Large Fire Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Area Share Top 3 Percent Label =
+VAR P = [Area Share Top 3 Percent]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Pooled Top 3 Reference Label =
+VAR P = [Pooled Top 3 Reference]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Agency Top 3 Minimum Label =
+VAR P = [Agency Top 3 Minimum]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Agency Top 3 Maximum Label =
+VAR P = [Agency Top 3 Maximum]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Exact Size Share Label =
+VAR P = [Exact Size Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Unknown Cause Share Label =
+VAR P = [Unknown Cause Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Missing Report Date Share Label =
+VAR P = [Missing Report Date Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Source Unknown Cause Share Label =
+VAR P = [Source Unknown Cause Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Source Missing Date Share Label =
+VAR P = [Source Missing Date Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+NFD Reconciliation Gap Label =
+VAR P = [NFD Reconciliation Gap]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+YoY Area Change Label =
+VAR P = [YoY Area Change]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Cause Record Share Label =
+VAR P = [Cause Record Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Cause Area Share Label =
+VAR P = [Cause Area Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Natural Cause Record Share Label =
+VAR P = [Natural Cause Record Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Natural Cause Area Share Label =
+VAR P = [Natural Cause Area Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Human Cause Record Share Label =
+VAR P = [Human Cause Record Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+NT Response Record Share Label =
+VAR P = [NT Response Record Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+NT Response Area Share Label =
+VAR P = [NT Response Area Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+NT Monitored Modified Area Share Label =
+VAR P = [NT Monitored Modified Area Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+NT Classification Population Label =
+VAR P = [NT Classification Population]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Monthly Record Share Label =
+VAR P = [Monthly Record Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Display-only companion; precise numeric measure retained
+// Model format: text
+Mapped Top Five Cell Share Label =
+VAR P = [Mapped Top Five Cell Share]
+VAR Magnitude = ABS(P)
+VAR SignText = IF(P < 0, "decrease ", "")
+RETURN SWITCH(TRUE(),
+    ISBLANK(P), "Not available",
+    P = 0, "0%",
+    P = 1, "100%",
+    P = -1, "-100%",
+    Magnitude < 0.01, SignText & "under 1%",
+    Magnitude > 0.99 && Magnitude < 1, SignText & "over 99%",
+    Magnitude > 1 && Magnitude < 1.01, SignText & "over 100%",
+    FORMAT(P, "0%"))
+
+// Reference: Executive answer card value, not a dynamic sentence
+// Model format: text
+Agency Concentration Range Label =
+VAR LowLabel = [Agency Top 3 Minimum Label]
+VAR HighLabel = [Agency Top 3 Maximum Label]
+RETURN LowLabel & " to " & HighLabel
+
+// Reference: vw_kpi_summary mean minus median
+// Model format: #,0.00
+Mean vs Median Gap Ha =
+VAR Gap = [Mean Size Ha] - [Median Size Ha]
+RETURN Gap
+
+// Reference: Distinct reporting agencies with selected records in current context
+// Model format: #,0
+Scope Agency Count =
+VAR Agencies = FILTER(VALUES(dim_agency[agency_key]), CALCULATE([Total Records]) > 0)
+RETURN COUNTROWS(Agencies)
+
+// Reference: Current dimension context and approved analysis scope
+// Model format: text
+Scope Subtitle =
+VAR Years = FILTER(VALUES(dim_year[year_key]), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025)
+VAR FirstYear = MINX(Years, dim_year[year_key])
+VAR LastYear = MAXX(Years, dim_year[year_key])
+VAR Agencies = [Scope Agency Count]
+RETURN IF(ISBLANK(FirstYear), "No matching scope", "Fixed reporting-agency series | " & FORMAT(FirstYear,"0") & "–" & FORMAT(LastYear,"0") & " | " & FORMAT(Agencies,"0") & " reporting agencies | Counts: reported records; area: summed SIZE_HA in ha, not unique land.")
+
+// Reference: NT-only period and definitions, not a headline
+// Model format: text
+NT Scope Subtitle =
+VAR Years = FILTER(VALUES(dim_year[year_key]), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025)
+VAR FirstYear = MINX(Years, dim_year[year_key])
+VAR LastYear = MAXX(Years, dim_year[year_key])
+RETURN IF(ISBLANK(FirstYear), "No matching scope", "Northwest Territories reporting agency | " & FORMAT(FirstYear,"0") & "–" & FORMAT(LastYear,"0") & " | 1 reporting agency | Record and reported-area shares include Unknown; FUL full, MOD modified, MON monitored.")
+
+// Reference: load_batch.source_version
+// Model format: text
+Source Version =
+VAR VersionText = SELECTEDVALUE(load_batch[source_version], "Multiple source versions")
+RETURN "Source version: " & VersionText
+

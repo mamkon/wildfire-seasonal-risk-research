@@ -1,0 +1,490 @@
+{
+  "compatibilityLevel": 1601,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"Annual\", \"Concentration\", \"Recording\", \"Cause\", \"NT Response\", \"Season\", \"Agency\", \"Grid\"]"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-CA",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-CA",
+    "tables": [
+      {
+        "name": "Annual",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Year",
+            "dataType": "string",
+            "lineageTag": "d304c004-98d8-4d41-86eb-b7a00befc10b",
+            "sourceColumn": "Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area (million ha)",
+            "dataType": "double",
+            "lineageTag": "23e73275-a4da-4019-9328-578e0e09b90d",
+            "sourceColumn": "Area (million ha)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Five-year mean (million ha)",
+            "dataType": "double",
+            "lineageTag": "fbc69ce2-7a04-429c-b1ce-536eb086ee4b",
+            "sourceColumn": "Five-year mean (million ha)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "e3efb097-2391-4c9f-9724-ec4d84483173",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "7dff4c4d-d4bb-4dc4-85a2-353ba01f6543",
+        "partitions": [
+          {
+            "name": "Annual",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siMjAwMCIsIDAuNjM1MTg2NzYxMDAzNjM0NSwgbnVsbCwgNTM5OF0sIFsiMjAwMSIsIDAuNjUyNjA4MTcxMDI5NzYzOCwgbnVsbCwgNzcyOF0sIFsiMjAwMiIsIDIuNzYxODgwNzk2MTUxMjQsIG51bGwsIDc4NDVdLCBbIjIwMDMiLCAyLjE2ODM5MzIzMDAxMjg2NzQsIG51bGwsIDgyNTZdLCBbIjIwMDQiLCAzLjE4Mjk4NDAyNTU5OTQ1OSwgMS44ODAyMTA1OTY3NTkzOTMyLCA2NDY3XSwgWyIyMDA1IiwgMS42ODY3MTYwNjYwMDgyMjY4LCAyLjA5MDUxNjQ1Nzc2MDMxMSwgNzQzN10sIFsiMjAwNiIsIDIuMTAwNjI2OTAwODA3MDY3NywgMi4zODAxMjAyMDM3MTU3NzI1LCA5NzExXSwgWyIyMDA3IiwgMS43ODU0MjQ2NzcxOTg2MDUsIDIuMTg0ODI4OTc5OTI1MjQ1LCA2OTEwXSwgWyIyMDA4IiwgMS42NTU2MjQ3MzEwMDIxNDQ0LCAyLjA4MjI3NTI4MDEyMzEwMDQsIDYyMTJdLCBbIjIwMDkiLCAwLjc1NTU2Mzc1OTAwMDcwOTQsIDEuNTk2NzkxMjI2ODAzMzUwOCwgNzExMl0sIFsiMjAxMCIsIDMuMTc1ODQ4MzU4MzUzMjExMywgMS44OTQ2MTc2ODUyNzIzNDc4LCA3Mjk4XSwgWyIyMDExIiwgMi4zOTI2MDUwODczNjg5NjczLCAxLjk1MzAxMzMyMjU4NDcyNzMsIDQ2NDldLCBbIjIwMTIiLCAxLjgwOTEwNjc1MDE4NTU4NTMsIDEuOTU3NzQ5NzM3MTgyMTIzNSwgNzg5NV0sIFsiMjAxMyIsIDQuMjY3Mjk4NjkzMDU0MjI2LCAyLjQ4MDA4NDUyOTU5MjU0LCA2MjI2XSwgWyIyMDE0IiwgNC41NDE3NTYzOTM4MDA2MSwgMy4yMzczMjMwNTY1NTI1MjA0LCA0OTk5XSwgWyIyMDE1IiwgMy44OTgyNzA2NTA1MTc3OTEsIDMuMzgxODA3NTE0OTg1NDM2MywgNjk5OV0sIFsiMjAxNiIsIDEuMzEzMDk0MDcxNjEwMjA5LCAzLjE2NTkwNTMxMTgzMzY4NCwgNTIzM10sIFsiMjAxNyIsIDMuNTg3MjMzNjA1MDE0MTQ0LCAzLjUyMTUzMDY4Mjc5OTM5NiwgNTYzOF0sIFsiMjAxOCIsIDIuMjg5MTcwOTc0MDA1NTkzLCAzLjEyNTkwNTEzODk4OTY2OTUsIDcwODNdLCBbIjIwMTkiLCAxLjc4NTgwMTM2Njc2NjUxMTgsIDIuNTc0NzE0MTMzNTgyODUsIDQwNDZdLCBbIjIwMjAiLCAwLjIxNjg1OTAxMTQwMjc2MzI2LCAxLjgzODQzMTgwNTc1OTg0NCwgMzk5NF0sIFsiMjAyMSIsIDQuMDczNzQzMDc0MjI5MDg4LCAyLjM5MDU2MTYwNjI4MzYyLCA2Njg3XSwgWyIyMDIyIiwgMS41Njg1MDE3Njc4NTE3MTUyLCAxLjk4NjgxNTIzODg1MTEzNDIsIDU2MjVdLCBbIjIwMjMiLCAxNy42MDY0MDgyMjI4OTc5MjYsIDUuMDUwMjYyNjg4NjI5NjAwNSwgNjgyNV0sIFsiMjAyNCIsIDUuMzcyNDk3NDI3ODc3ODUxNSwgNS43Njc2MDE5MDA4NTE4NjksIDU4MTldLCBbIjIwMjUiLCA4LjcwNTE1NDY4MTQ0NjgxNCwgNy40NjUyNjEwMzQ4NjA2NzgsIDYxODRdXQ==\", BinaryEncoding.Base64)), {\"Year\", \"Area (million ha)\", \"Five-year mean (million ha)\", \"Records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Year\", type text}, {\"Area (million ha)\", type number}, {\"Five-year mean (million ha)\", type number}, {\"Records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Concentration",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Agency",
+            "dataType": "string",
+            "lineageTag": "bb8c8a28-352d-40f5-9a25-c61377ebf947",
+            "sourceColumn": "Agency",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area share (%)",
+            "dataType": "double",
+            "lineageTag": "5bfa87c6-4c01-4a5f-9c90-b5aa5fe529ef",
+            "sourceColumn": "Area share (%)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Display share",
+            "dataType": "string",
+            "lineageTag": "ef6399a9-5a91-42f7-8430-4a75cbabde73",
+            "sourceColumn": "Display share",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Top records",
+            "dataType": "int64",
+            "lineageTag": "901b9265-7f80-43c5-999b-d5e5495ea8df",
+            "sourceColumn": "Top records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "a115b9e1-3043-456c-8950-181bd2718d65",
+        "partitions": [
+          {
+            "name": "Concentration",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siQUIiLCA5OS41NTkyMDM5MTEzOTg2MywgIm92ZXIgOTklIiwgMTA2NV0sIFsiQkMiLCA5OC4yODUzNjg3ODExNTE3LCAiOTglIiwgMTMxMV0sIFsiTUIiLCA4Ni40NTA4MDM2ODE3OTI2OSwgIjg2JSIsIDMyNV0sIFsiTkIiLCA2OC41NDcyMjM1ODQ0Mjk2MiwgIjY5JSIsIDIxMV0sIFsiTkwiLCA5My4wNDEyNjE1MTkwNDA3NywgIjkzJSIsIDc3XSwgWyJOUyIsIDkxLjgyODMyNDA1NjAxMTksICI5MiUiLCAxNzVdLCBbIk5UIiwgNzAuNzAzNTgwMzQ0OTU0NzcsICI3MSUiLCAxNTddLCBbIk9OIiwgOTcuODM1MjcxNDA3NzM0OTEsICI5OCUiLCA3MTBdLCBbIlBDIiwgODcuMjEzMjE4NzgwMjY2MjcsICI4NyUiLCA4NV0sIFsiUUMiLCA5Ny4wNTk3Njc0MjYzMDAzLCAiOTclIiwgNDcwXSwgWyJTSyIsIDg2LjAxNzM3NTUwOTEwMTQ0LCAiODYlIiwgMzc4XSwgWyJZVCIsIDU5LjQ1OTQ4ODU1NjE5Njg0LCAiNTklIiwgOTBdXQ==\", BinaryEncoding.Base64)), {\"Agency\", \"Area share (%)\", \"Display share\", \"Top records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Agency\", type text}, {\"Area share (%)\", type number}, {\"Display share\", type text}, {\"Top records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Recording",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Agency",
+            "dataType": "string",
+            "lineageTag": "c70ca04e-b567-4bf5-82b2-b0fbe4dda315",
+            "sourceColumn": "Agency",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Exact size",
+            "dataType": "string",
+            "lineageTag": "255a293d-6082-4f7b-ab4f-6f75b08d15f0",
+            "sourceColumn": "Exact size",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Record share (%)",
+            "dataType": "double",
+            "lineageTag": "2d54f6d3-33b2-4bf1-babd-77dc4a4d637a",
+            "sourceColumn": "Record share (%)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "d9e123f5-9d15-46a8-b29d-00514e72bda6",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Agency records",
+            "dataType": "int64",
+            "lineageTag": "3a3c48e1-e772-4126-bce7-80934f9d7949",
+            "sourceColumn": "Agency records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "84f3d6f8-9f67-4a36-a19c-d07e6a7fa9d8",
+        "partitions": [
+          {
+            "name": "Recording",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siQUIiLCAiMCBoYSIsIDAuMCwgMCwgMzU0NzVdLCBbIkFCIiwgIjAuMDEgaGEiLCA0NS43NTMzNDc0Mjc3NjYwMywgMTYyMzEsIDM1NDc1XSwgWyJBQiIsICIwLjEgaGEiLCAxMC44MzU3OTk4NTkwNTU2NzMsIDM4NDQsIDM1NDc1XSwgWyJCQyIsICIwIGhhIiwgMC41ODM4MzEzMDcwOTUyNjc1LCAyNTUsIDQzNjc3XSwgWyJCQyIsICIwLjAxIGhhIiwgNC4zNDA5NTc0ODMzNDM2MzYsIDE4OTYsIDQzNjc3XSwgWyJCQyIsICIwLjEgaGEiLCA4Ljk5Nzg3MDczMjg4MDAwNiwgMzkzMCwgNDM2NzddLCBbIk1CIiwgIjAgaGEiLCAxLjQyMjIzODY0MDU2MTUwNzMsIDE1NCwgMTA4MjhdLCBbIk1CIiwgIjAuMDEgaGEiLCAwLjAsIDAsIDEwODI4XSwgWyJNQiIsICIwLjEgaGEiLCAxNi43MDY2ODYzNjg2NzM4MSwgMTgwOSwgMTA4MjhdLCBbIk5CIiwgIjAgaGEiLCAwLjkzODU2NjU1MjkwMTAyNCwgNjYsIDcwMzJdLCBbIk5CIiwgIjAuMDEgaGEiLCAwLjAsIDAsIDcwMzJdLCBbIk5CIiwgIjAuMSBoYSIsIDQ4LjkxOTIyNjM5MzYyOTEyNCwgMzQ0MCwgNzAzMl0sIFsiTkwiLCAiMCBoYSIsIDQzLjg5NzYzNzc5NTI3NTU5LCAxMTE1LCAyNTQwXSwgWyJOTCIsICIwLjAxIGhhIiwgMC4wLCAwLCAyNTQwXSwgWyJOTCIsICIwLjEgaGEiLCAxNC4yMTI1OTg0MjUxOTY4NTIsIDM2MSwgMjU0MF0sIFsiTlMiLCAiMCBoYSIsIDE1Ljk0ODQ5Nzg1NDA3NzI1MywgOTI5LCA1ODI1XSwgWyJOUyIsICIwLjAxIGhhIiwgMTEuODI4MzI2MTgwMjU3NTEsIDY4OSwgNTgyNV0sIFsiTlMiLCAiMC4xIGhhIiwgMTAuNjk1Mjc4OTY5OTU3MDgyLCA2MjMsIDU4MjVdLCBbIk5UIiwgIjAgaGEiLCAxLjM0MDQ4MjU3MzcyNjU0MTYsIDcwLCA1MjIyXSwgWyJOVCIsICIwLjAxIGhhIiwgNS42NDkxNzY1NjA3MDQ3MTEsIDI5NSwgNTIyMl0sIFsiTlQiLCAiMC4xIGhhIiwgNS40NTc2NzkwNTAxNzIzNDgsIDI4NSwgNTIyMl0sIFsiT04iLCAiMCBoYSIsIDAuMDA4NDUyMzcwODkwMDM0NjU0LCAyLCAyMzY2Ml0sIFsiT04iLCAiMC4wMSBoYSIsIDAuMCwgMCwgMjM2NjJdLCBbIk9OIiwgIjAuMSBoYSIsIDIuMDcwODMwODY4MDU4NDkwNCwgNDkwLCAyMzY2Ml0sIFsiUEMiLCAiMCBoYSIsIDEuNDU2NDgzMTI2MTEwMTI0MywgNDEsIDI4MTVdLCBbIlBDIiwgIjAuMDEgaGEiLCAxNS45MTQ3NDI0NTExNTQ1MywgNDQ4LCAyODE1XSwgWyJQQyIsICIwLjEgaGEiLCAxOC45MzQyODA2Mzk0MzE2MTYsIDUzMywgMjgxNV0sIFsiUUMiLCAiMCBoYSIsIDM5LjM4OTg2OTUzMTg0OTU4NCwgNjE1OSwgMTU2MzZdLCBbIlFDIiwgIjAuMDEgaGEiLCAwLjAsIDAsIDE1NjM2XSwgWyJRQyIsICIwLjEgaGEiLCAxNC4yMTA3OTU1OTk4OTc2NzIsIDIyMjIsIDE1NjM2XSwgWyJTSyIsICIwIGhhIiwgMC42MTI1Njk2MTAxODI5NzU0LCA3NywgMTI1NzBdLCBbIlNLIiwgIjAuMDEgaGEiLCA5Ljk3NjEzMzY1MTU1MTMxMywgMTI1NCwgMTI1NzBdLCBbIlNLIiwgIjAuMSBoYSIsIDE4LjI0MTg0NTY2NDI4MDAzLCAyMjkzLCAxMjU3MF0sIFsiWVQiLCAiMCBoYSIsIDMuMTczMDEyNjkyMDUwNzY4LCA5NSwgMjk5NF0sIFsiWVQiLCAiMC4wMSBoYSIsIDE0Ljc5NjI1OTE4NTAzNjczOSwgNDQzLCAyOTk0XSwgWyJZVCIsICIwLjEgaGEiLCA4LjM1MDAzMzQwMDEzMzYsIDI1MCwgMjk5NF1d\", BinaryEncoding.Base64)), {\"Agency\", \"Exact size\", \"Record share (%)\", \"Records\", \"Agency records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Agency\", type text}, {\"Exact size\", type text}, {\"Record share (%)\", type number}, {\"Records\", Int64.Type}, {\"Agency records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Cause",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Cause",
+            "dataType": "string",
+            "lineageTag": "6a97d88a-731c-4eed-9ddf-be85e2de8955",
+            "sourceColumn": "Cause",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Record share (%)",
+            "dataType": "double",
+            "lineageTag": "7d0c6ab8-5223-4730-80b2-487fc5fc8f5c",
+            "sourceColumn": "Record share (%)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area share (%)",
+            "dataType": "double",
+            "lineageTag": "ec1afb0a-9de5-4cb3-919d-0ca17b8c8dee",
+            "sourceColumn": "Area share (%)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "fdf0c3e9-4905-49b5-a395-67935b845cd5",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6e95aa48-478e-4c80-9f40-71945f447caa",
+        "partitions": [
+          {
+            "name": "Cause",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siSHVtYW4iLCA0OS4yMzkzNDQ4ODU3ODI4ODQsIDcuODQwODA5OTQ0NzA5OTE4LCA4Mjg1OF0sIFsiTmF0dXJhbC9saWdodG5pbmciLCA0Ni4xNDg1ODkyMjI0Njc4NSwgODYuNjUyMzA0MTExNTg1MjQsIDc3NjU3XSwgWyJVbmtub3duIiwgNC42MTIwNjU4OTE3NDkyNjg1LCA1LjUwNjg4NTk0MzcwNDg0MywgNzc2MV1d\", BinaryEncoding.Base64)), {\"Cause\", \"Record share (%)\", \"Area share (%)\", \"Records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Cause\", type text}, {\"Record share (%)\", type number}, {\"Area share (%)\", type number}, {\"Records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "NT Response",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Response classification",
+            "dataType": "string",
+            "lineageTag": "d70dedf2-489a-498d-ad34-cb678aa0eef4",
+            "sourceColumn": "Response classification",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Record share (%)",
+            "dataType": "double",
+            "lineageTag": "fb7f4e78-3af7-48f9-9f3c-4c43066c41b9",
+            "sourceColumn": "Record share (%)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area share (%)",
+            "dataType": "double",
+            "lineageTag": "318cc9a1-4874-4aec-a7b1-3ff55c5fbb0f",
+            "sourceColumn": "Area share (%)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "ca68c539-723e-4f63-a12d-7639596e872e",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "b18906cf-a4b6-4030-9989-8b77872a0e3b",
+        "partitions": [
+          {
+            "name": "NT Response",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siRnVsbCIsIDM2LjA1ODk4MTIzMzI0Mzk3LCA3LjY5NDExNjEyMTU0NTYwNCwgMTg4M10sIFsiTW9kaWZpZWQiLCA1LjQ5NTk3ODU1MjI3ODgyMSwgMjguODIwODk4MDI0MTc4NjEsIDI4N10sIFsiTW9uaXRvcmVkIiwgNTYuODE3MzExMzc0OTUyMTI2LCA2MS4yNDExMzM3NzcyNDEzNDUsIDI5NjddLCBbIlVua25vd24iLCAxLjYyNzcyODgzOTUyNTA4NjIsIDIuMjQzODUyMDc3MDM0NDM5LCA4NV1d\", BinaryEncoding.Base64)), {\"Response classification\", \"Record share (%)\", \"Area share (%)\", \"Records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Response classification\", type text}, {\"Record share (%)\", type number}, {\"Area share (%)\", type number}, {\"Records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Season",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Month",
+            "dataType": "string",
+            "lineageTag": "5d0041b4-4f46-49ae-9a6b-d5bd2c17e201",
+            "sourceColumn": "Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "4ec239db-9b44-47a0-b775-3c2bc70614a3",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "d19c2b6c-40b5-43c5-8569-1f905c684b70",
+        "partitions": [
+          {
+            "name": "Season",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siMDEgSmFuIiwgMzEyXSwgWyIwMiBGZWIiLCAyNzFdLCBbIjAzIE1hciIsIDE2NzRdLCBbIjA0IEFwciIsIDE1MDA5XSwgWyIwNSBNYXkiLCAyOTY3MV0sIFsiMDYgSnVuIiwgMjc1ODJdLCBbIjA3IEp1bCIsIDQyMjM1XSwgWyIwOCBBdWciLCAzMjAxMl0sIFsiMDkgU2VwIiwgMTA2MzddLCBbIjEwIE9jdCIsIDQzMDRdLCBbIjExIE5vdiIsIDkxMV0sIFsiMTIgRGVjIiwgMjQwXV0=\", BinaryEncoding.Base64)), {\"Month\", \"Records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Month\", type text}, {\"Records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Agency",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Agency",
+            "dataType": "string",
+            "lineageTag": "5dfd9a8e-1f5a-4ad0-b123-d3aa21ef2f01",
+            "sourceColumn": "Agency",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "aa947997-141e-44da-bdc2-82f6ba816695",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area (million ha)",
+            "dataType": "double",
+            "lineageTag": "0459ec9b-6953-4bdc-bb2f-96882fcc605a",
+            "sourceColumn": "Area (million ha)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Median size (ha)",
+            "dataType": "double",
+            "lineageTag": "c8f45411-5512-44b3-9e00-46cb0e00c8ec",
+            "sourceColumn": "Median size (ha)",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "f656e0a5-d15d-45bc-ba5c-8548b60920b2",
+        "partitions": [
+          {
+            "name": "Agency",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siQUIiLCAzNTQ3NSwgOC40NjY3Mjg5NCwgMC4wM10sIFsiQkMiLCA0MzY3NywgMTAuNjIxMTI1ODEzOTk5OTk5LCAwLjA5XSwgWyJNQiIsIDEwODI4LCA4LjI1NjA5NDk5ODAxOTc5NiwgMS4wXSwgWyJOQiIsIDcwMzIsIDAuMDE0MDcwMjk5OTk5OTk5OTk5LCAwLjJdLCBbIk5MIiwgMjU0MCwgMC40MDY3NTIxNjU0NiwgMC4xXSwgWyJOUyIsIDU4MjUsIDAuMDUxNDE5MTIwNDc1NDE0NzU1LCAwLjE0MDAwMDAwMDU5Nl0sIFsiTlQiLCA1MjIyLCAxNi42ODM4NjA0ODQwMTA2MSwgMTIuMF0sIFsiT04iLCAyMzY2MiwgNC4zNDI1MjEyOTQ5MDg3OTksIDAuMjAwMDAwMDAyOThdLCBbIlBDIiwgMjgxNSwgMy40MTkwNzk4ODgwNTkwMjM2LCAwLjJdLCBbIlFDIiwgMTU2MzYsIDkuNzUzMzA3NjI1ODQ4MDgyLCAwLjFdLCBbIlNLIiwgMTI1NzAsIDE3LjEwMTMwMDQwOTQxNSwgMC41XSwgWyJZVCIsIDI5OTQsIDQuODcyMDk4MjEzOTk5OTk5LCA0LjBdXQ==\", BinaryEncoding.Base64)), {\"Agency\", \"Records\", \"Area (million ha)\", \"Median size (ha)\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Agency\", type text}, {\"Records\", Int64.Type}, {\"Area (million ha)\", type number}, {\"Median size (ha)\", type number}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Grid",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Rounded coordinate cell",
+            "dataType": "string",
+            "lineageTag": "7fb036bc-c1a0-4163-acc5-58b008e37bee",
+            "sourceColumn": "Rounded coordinate cell",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Area (million ha)",
+            "dataType": "double",
+            "lineageTag": "86b0b01e-06d0-4395-9a6c-1206348dbe6c",
+            "sourceColumn": "Area (million ha)",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Records",
+            "dataType": "int64",
+            "lineageTag": "b7126cf2-6295-4749-bf3a-f784041e5a07",
+            "sourceColumn": "Records",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "6c15d425-9d93-49e8-9a55-0b8039879fa5",
+        "partitions": [
+          {
+            "name": "Grid",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.FromRows(Json.Document(Binary.FromText(\"W1siNjBfLTExMiIsIDEuMDk1MjI0MDYwOTcyNjg3OCwgMjUzXSwgWyI1Nl8tMTA3IiwgMS4wOTIzNzY5NTE3OTcsIDE2OF0sIFsiNTlfLTEyMiIsIDAuOTQyMDc4OTM5MDAwMDAwMSwgMjU3XSwgWyI1M18tNzUiLCAwLjkzNjcyOTMxNDIsIDE4XSwgWyI2MF8tMTIxIiwgMC45MjQwNTU5MzAwMDAwMDAxLCAxMjNdLCBbIjU4Xy0xMTEiLCAwLjc0MTQzOTYwMDAwMDAwMDEsIDE1NV0sIFsiNjBfLTExMSIsIDAuNzM3MTMzMzE5ODI0MjIsIDIxMV0sIFsiNThfLTEyMiIsIDAuNzE5NDg5NjEyLCAxMDNdLCBbIjYyXy0xMTciLCAwLjcwMzk3Njc4NzA3LCAyN10sIFsiNTRfLTEwNSIsIDAuNzAxNzczODQ1MDkwOTk5OSwgMjE4XSwgWyI1OV8tMTEzIiwgMC42OTIzMDAzNDM3NzMsIDc3XSwgWyI1Ml8tNzgiLCAwLjY4MTc0MjE5NjIyNzQ1NCwgNDZdLCBbIjU4Xy0xMDYiLCAwLjY3NDMxODgyLCAyOF0sIFsiNTVfLTEwMyIsIDAuNjY3OTM1MTM0OTAxLCAxMDQ0XSwgWyI1N18tMTExIiwgMC42NjYxNTA2ODk5OTk5OTk5LCA1MjVdLCBbIjUxXy05NSIsIDAuNjE4ODYwODAzNjk4NTkxNCwgMzQ0XSwgWyI1NV8tMTA2IiwgMC42MDQ1ODQ0NTk2ODQsIDMzMF0sIFsiNTZfLTEwOCIsIDAuNTc3NTY4ODQ4MDc3LCAyNjRdLCBbIjU2Xy0xMDYiLCAwLjU1ODM0MzU4MTc2NiwgMTQ2XSwgWyI1N18tMTA4IiwgMC41NTM1OTQxNjk2NzMsIDEyMF1d\", BinaryEncoding.Base64)), {\"Rounded coordinate cell\", \"Area (million ha)\", \"Records\"}),",
+                "    Typed = Table.TransformColumnTypes(Source, {{\"Rounded coordinate cell\", type text}, {\"Area (million ha)\", type number}, {\"Records\", Int64.Type}}, \"en-CA\")",
+                "in",
+                "    Typed"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

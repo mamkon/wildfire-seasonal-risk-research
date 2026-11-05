@@ -1,0 +1,5 @@
+year,comparison,count,area_ha,scope_note,source
+2023,Project analysis,6825,17606408.222897924,12 reporting agencies; pending NFD reconciliation,data/warehouse/wildfire.db
+2023,Full CNFDB source year,6837,17606546.667790018,Before project exclusions; pending NFD reconciliation,data/warehouse/wildfire.db
+2023,NRCan Annual Report 2024,6811,17197201,"Published national summary, separate edition",https://prod-natural-resources.azure.cloud.nrcan-rncan.gc.ca/forests-forestry/state-canada-forests/disturbance-canadas-forests
+2023,NRCan Annual Report 2025,6837,17606547,"Published national summary, whole hectares",https://prod-natural-resources.azure.cloud.nrcan-rncan.gc.ca/forests-forestry/state-canada-forests/state-canada-s-forests-annual-report-2025

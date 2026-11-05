@@ -1,0 +1,10 @@
+{
+  "selected_window": "modern_fixed_agencies",
+  "start_year": 2000,
+  "end_year": 2025,
+  "excluded_reporting_agencies": [
+    "PE"
+  ],
+  "eligible_records_verified": 168276,
+  "minimum_segment_records": 30
+}

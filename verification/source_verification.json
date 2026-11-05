@@ -1,0 +1,30 @@
+{
+  "filename": "NFDB_point_20260811.txt",
+  "bytes": 79400339,
+  "sha256": "85a40d9cd40a05ebdcaadf15696ea665c66320668732fa79f2952fba6bb1404b",
+  "source_rows": 448618,
+  "source_columns": 24,
+  "metadata_publication_date": "2026-05-27",
+  "metadata_creation_date": "2026-05-27",
+  "download_directory_modified_date": "2026-08-20",
+  "access_date": "2026-11-04",
+  "documented_agency_start_years": {
+    "BC": 1950,
+    "AB": 1959,
+    "SK": 1959,
+    "MB": 1959,
+    "ON": 1959,
+    "QC": 1959,
+    "NS": 1960,
+    "NB": 1980,
+    "NL": 1955,
+    "YT": 1946,
+    "NT": 1959,
+    "PE": 2018,
+    "PC": 1946
+  },
+  "documented_end_year": 2025,
+  "release_label_in_filename": "20260811",
+  "negative_duration_rows": 546,
+  "paired_report_out_rows": 231795
+}

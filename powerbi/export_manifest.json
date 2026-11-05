@@ -1,0 +1,153 @@
+[
+  {
+    "table": "load_batch",
+    "rows": 1,
+    "columns": [
+      "batch_key",
+      "source_version",
+      "source_sha256",
+      "analysis_start",
+      "analysis_end"
+    ],
+    "sha256": "4467e99dd7067051d72d3cf96516bd5670c76ecbb792d83a9161f349a4c833bd"
+  },
+  {
+    "table": "fact_fire",
+    "rows": 448618,
+    "columns": [
+      "fire_key",
+      "fire_id",
+      "batch_key",
+      "date_key",
+      "year_key",
+      "month_key",
+      "agency_key",
+      "cause_key",
+      "size_class_key",
+      "response_key",
+      "latitude",
+      "longitude",
+      "size_ha",
+      "is_large_fire",
+      "in_analysis",
+      "missing_report_date",
+      "missing_size",
+      "invalid_size",
+      "invalid_coordinates",
+      "invalid_calendar_date",
+      "report_calendar_conflict",
+      "exact_duplicate_row",
+      "known_prescribed",
+      "repeated_fire_id",
+      "grid_cell",
+      "report_date",
+      "out_date",
+      "out_before_report"
+    ],
+    "sha256": "13b899f1e6e050abda17b6b7bf10b7376535910440b2439e7b8c22245682fd8f"
+  },
+  {
+    "table": "fact_nfd_annual",
+    "rows": 0,
+    "columns": [
+      "jurisdiction",
+      "year",
+      "reporting_category",
+      "source_version",
+      "fire_count",
+      "area_ha",
+      "source_url",
+      "scope_note"
+    ],
+    "sha256": "8ff661deb4e2e129f345e0a202b1117cfbba26636608fa7fe276a625c9832e67"
+  },
+  {
+    "table": "dim_agency",
+    "rows": 14,
+    "columns": [
+      "agency_key",
+      "agency_code",
+      "reporting_agency",
+      "documented_start_year",
+      "reporting_agency_name"
+    ],
+    "sha256": "edc4f5efe0ec4d503d5db982ac4270259e971d8d53b1dc3260744ff0b336c6b8"
+  },
+  {
+    "table": "dim_cause",
+    "rows": 4,
+    "columns": [
+      "cause_key",
+      "cause_code",
+      "cause_class"
+    ],
+    "sha256": "621bfda9534bae7881524157d76b73747319e4ce0929a097a2134274118c1e6e"
+  },
+  {
+    "table": "dim_size_class",
+    "rows": 7,
+    "columns": [
+      "size_class_key",
+      "size_class",
+      "sort_order",
+      "min_ha",
+      "max_ha"
+    ],
+    "sha256": "d54624cfe43ea21cbfefdd3bc844be38580d6b5847754ed0d01e44552a31a86b"
+  },
+  {
+    "table": "dim_response",
+    "rows": 11,
+    "columns": [
+      "response_key",
+      "response_code",
+      "response_class"
+    ],
+    "sha256": "d99f98c26256d96692fd21e6ca0c3a28c61cadca4d99233143858347f013fc38"
+  },
+  {
+    "table": "dim_date",
+    "rows": 35065,
+    "columns": [
+      "date_key",
+      "date",
+      "year",
+      "month_num",
+      "month_name",
+      "season",
+      "decade"
+    ],
+    "sha256": "d90c38974354baf687eec4724cb9c887728c3acc6ba1c4b0b55797e754f9a9f6"
+  },
+  {
+    "table": "dim_year",
+    "rows": 97,
+    "columns": [
+      "year_key",
+      "year_label",
+      "decade_start",
+      "decade_label"
+    ],
+    "sha256": "a4ef58fc9d7853552d23047024c22ecf0cfb15eab4d9c230276deb34203c41f5"
+  },
+  {
+    "table": "dim_month",
+    "rows": 13,
+    "columns": [
+      "month_key",
+      "month_name",
+      "season"
+    ],
+    "sha256": "bcced3513436cfc3a492f7fdaa7726671036bd5e02145ebb8233e968f64544a6"
+  },
+  {
+    "table": "dim_grid",
+    "rows": 1210,
+    "columns": [
+      "grid_cell",
+      "latitude",
+      "longitude"
+    ],
+    "sha256": "c75796d50749c24a5ddabaf71ec7e97c353b55d7f2e51aa1808bab6987f3a5d9"
+  }
+]

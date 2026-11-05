@@ -1,0 +1,93 @@
+{
+  "relationships": [
+    {
+      "dimension": "dim_agency",
+      "dimension_key": "agency_key",
+      "fact": "fact_fire",
+      "fact_key": "agency_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_cause",
+      "dimension_key": "cause_key",
+      "fact": "fact_fire",
+      "fact_key": "cause_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_date",
+      "dimension_key": "date_key",
+      "fact": "fact_fire",
+      "fact_key": "date_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_year",
+      "dimension_key": "year_key",
+      "fact": "fact_fire",
+      "fact_key": "year_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_month",
+      "dimension_key": "month_key",
+      "fact": "fact_fire",
+      "fact_key": "month_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_response",
+      "dimension_key": "response_key",
+      "fact": "fact_fire",
+      "fact_key": "response_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_size_class",
+      "dimension_key": "size_class_key",
+      "fact": "fact_fire",
+      "fact_key": "size_class_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "dim_grid",
+      "dimension_key": "grid_cell",
+      "fact": "fact_fire",
+      "fact_key": "grid_cell",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    },
+    {
+      "dimension": "load_batch",
+      "dimension_key": "batch_key",
+      "fact": "fact_fire",
+      "fact_key": "batch_key",
+      "cardinality": "one-to-many",
+      "direction": "single",
+      "active": true
+    }
+  ],
+  "disconnected_tables": [
+    "size_points",
+    "fact_nfd_annual"
+  ],
+  "date_table": "dim_date",
+  "date_column": "date",
+  "unknown_date_note": "Keep the -1 Unknown member. Use year and month dimensions for incomplete dates; no DATEADD/SAMEPERIODLASTYEAR measures. If Desktop rejects date-table marking due to the null Unknown date, leave it unmarked rather than inventing a date; annual measures do not require marking.",
+  "formatting": "Hide technical keys; sort dim_month[month_name] by month_key. No dimension-to-dimension relationships."
+}

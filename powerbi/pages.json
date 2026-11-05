@@ -1,0 +1,77 @@
+[
+  {
+    "reading_order": 1,
+    "navigation": "Executive Summary",
+    "section": "Main",
+    "headline": "DRAFT: verify: Large events matter, and recording differences matter too.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land.",
+    "build_order": 9
+  },
+  {
+    "reading_order": 2,
+    "navigation": "Concentration",
+    "section": "Main",
+    "headline": "DRAFT: verify: The largest events account for 59% to over 99% of the area within each agency.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land. Largest share: ceiling of 3% of records within each agency; source-row ties.",
+    "build_order": 1
+  },
+  {
+    "reading_order": 3,
+    "navigation": "Trust",
+    "section": "Main",
+    "headline": "DRAFT: verify: Small fire sizes appear differently across agencies.",
+    "evidence_note": "2023 national total matches the 2025 annual report at published precision. Jurisdiction-by-year NFD reconciliation is pending.",
+    "evidence_scope": "Fixed 2023 comparison of the full source-year total. Not affected by report filters.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land. Strict SIZE_HA equality at 0, 0.01 and 0.1 ha; near-values kept separate.",
+    "build_order": 2
+  },
+  {
+    "reading_order": 4,
+    "navigation": "Change",
+    "section": "Main",
+    "headline": "DRAFT: verify: Removing the largest year narrows the recent gap, but does not close it.",
+    "peak_year_tooltip": "The full 2023 source-year total matches the 2025 annual report at published precision. This chart uses the narrower analysis scope, which excludes seven Prince Edward Island records and five Ontario prescribed-fire records in 2023. Pending NFD reconciliation.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land. Decade means use observed years; 2023 total pending NFD reconciliation.",
+    "build_order": 3
+  },
+  {
+    "reading_order": 5,
+    "navigation": "Cause",
+    "section": "Main",
+    "headline": "DRAFT: verify: Natural causes account for fewer events but most of the recorded area.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land. Source causes: H human, N natural/lightning, U unknown; unknown included.",
+    "build_order": 4
+  },
+  {
+    "reading_order": 6,
+    "navigation": "NT Response",
+    "section": "Main",
+    "headline": "DRAFT: verify: Monitored and modified response classes together account for 90% of the area.",
+    "subtitle": "Northwest Territories reporting agency only | 2000\u20132025 | 1 reporting agency | Part of the fixed 12-agency series; record and area shares include Unknown. FUL: full, MOD: modified, MON: monitored.",
+    "build_order": 5
+  },
+  {
+    "reading_order": 7,
+    "navigation": "Season",
+    "section": "Explore",
+    "headline": "DRAFT: verify: July has the most recorded events.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land. Month is the source month; valid-month chart excludes unknown months.",
+    "build_order": 6
+  },
+  {
+    "reading_order": 8,
+    "navigation": "Agency Scorecard",
+    "section": "Explore",
+    "headline": "DRAFT: verify: Saskatchewan\u2019s reporting agency has the largest recorded area total.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land.",
+    "build_order": 7
+  },
+  {
+    "reading_order": 9,
+    "navigation": "Map",
+    "section": "Explore",
+    "headline": "DRAFT: verify: A few coarse locations hold a small share of the recorded area.",
+    "subtitle": "Fixed Canadian reporting-agency series | 2000\u20132025 | 12 reporting agencies | Counts: reported records; area: summed SIZE_HA in hectares, not unique land. Mapped subset only; rounded one-degree coordinates are not geographic provincial allocation.",
+    "build_order": 8
+  }
+]

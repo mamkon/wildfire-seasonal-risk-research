@@ -1,0 +1,254 @@
+[
+  {
+    "theme": "dark",
+    "usage": "title/value text",
+    "foreground": "#F2E6D8",
+    "background": "#1A1A1E",
+    "contrast": 14.115,
+    "minimum": 4.5,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "subtitle/axis text",
+    "foreground": "#9C9690",
+    "background": "#1A1A1E",
+    "contrast": 5.931,
+    "minimum": 4.5,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "data colour",
+    "foreground": "#B4472B",
+    "background": "#1A1A1E",
+    "contrast": 3.203,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "data colour",
+    "foreground": "#E8A33D",
+    "background": "#1A1A1E",
+    "contrast": 8.045,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "data colour",
+    "foreground": "#1F9E89",
+    "background": "#1A1A1E",
+    "contrast": 5.213,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "data colour",
+    "foreground": "#C8A99A",
+    "background": "#1A1A1E",
+    "contrast": 7.929,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "data colour",
+    "foreground": "#D9622B",
+    "background": "#1A1A1E",
+    "contrast": 4.736,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "data colour",
+    "foreground": "#7A6F68",
+    "background": "#1A1A1E",
+    "contrast": 3.553,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "dark",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#F2E6D8",
+    "background": "#B4472B",
+    "contrast": 4.407,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "dark",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#F2E6D8",
+    "background": "#E8A33D",
+    "contrast": 1.755,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "dark",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#F2E6D8",
+    "background": "#1F9E89",
+    "contrast": 2.708,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "dark",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#F2E6D8",
+    "background": "#C8A99A",
+    "contrast": 1.78,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "dark",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#F2E6D8",
+    "background": "#D9622B",
+    "contrast": 2.981,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "dark",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#F2E6D8",
+    "background": "#7A6F68",
+    "contrast": 3.972,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "light",
+    "usage": "title/value text",
+    "foreground": "#1A1A1E",
+    "background": "#F7F5F2",
+    "contrast": 15.943,
+    "minimum": 4.5,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "subtitle/axis text",
+    "foreground": "#59534F",
+    "background": "#F7F5F2",
+    "contrast": 6.954,
+    "minimum": 4.5,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "data colour",
+    "foreground": "#B4472B",
+    "background": "#F7F5F2",
+    "contrast": 4.978,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "data colour",
+    "foreground": "#8A5A00",
+    "background": "#F7F5F2",
+    "contrast": 5.447,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "data colour",
+    "foreground": "#147865",
+    "background": "#F7F5F2",
+    "contrast": 4.943,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "data colour",
+    "foreground": "#80685B",
+    "background": "#F7F5F2",
+    "contrast": 4.766,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "data colour",
+    "foreground": "#AC451F",
+    "background": "#F7F5F2",
+    "contrast": 5.323,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "data colour",
+    "foreground": "#6B625C",
+    "background": "#F7F5F2",
+    "contrast": 5.472,
+    "minimum": 3,
+    "passes": true
+  },
+  {
+    "theme": "light",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#1A1A1E",
+    "background": "#B4472B",
+    "contrast": 3.203,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "light",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#1A1A1E",
+    "background": "#8A5A00",
+    "contrast": 2.927,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "light",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#1A1A1E",
+    "background": "#147865",
+    "contrast": 3.226,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "light",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#1A1A1E",
+    "background": "#80685B",
+    "contrast": 3.345,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "light",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#1A1A1E",
+    "background": "#AC451F",
+    "contrast": 2.995,
+    "minimum": 4.5,
+    "passes": false
+  },
+  {
+    "theme": "light",
+    "usage": "inside-bar text; avoid if fails",
+    "foreground": "#1A1A1E",
+    "background": "#6B625C",
+    "contrast": 2.914,
+    "minimum": 4.5,
+    "passes": false
+  }
+]

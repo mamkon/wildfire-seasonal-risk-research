@@ -1,0 +1,15 @@
+reference,expected_status,actual_value,result
+Total Records,Not executed in Power BI,,Pending native execution
+Total Area Ha,Not executed in Power BI,,Pending native execution
+Median Size Ha,Not executed in Power BI,,Pending native execution
+Area Share Top 3 Percent,Not executed in Power BI,,Pending native execution
+Agency Top 3 Minimum,Not executed in Power BI,,Pending native execution
+Agency Top 3 Maximum,Not executed in Power BI,,Pending native execution
+YoY Area Change,Not executed in Power BI,,Pending native execution
+Five Year Rolling Area Ha,Not executed in Power BI,,Pending native execution
+Exact Size Share,Not executed in Power BI,,Pending native execution
+Cause Record Share,Not executed in Power BI,,Pending native execution
+Cause Area Share,Not executed in Power BI,,Pending native execution
+NT Monitored Modified Area Share,Not executed in Power BI,,Pending native execution
+Mapped Top Five Cell Share,Not executed in Power BI,,Pending native execution
+Display boundary cases,Not executed in Power BI,,Pending native execution

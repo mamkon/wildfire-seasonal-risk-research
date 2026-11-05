@@ -1,0 +1,446 @@
+[
+  {
+    "name": "Total Records",
+    "expression": "VAR Result = CALCULATE(COUNTROWS(fact_fire), KEEPFILTERS(fact_fire[in_analysis] = 1))\nRETURN Result",
+    "reference": "vw_kpi_summary.reported_records",
+    "format": "#,0"
+  },
+  {
+    "name": "Total Area Ha",
+    "expression": "VAR Result = CALCULATE(SUM(fact_fire[size_ha]), KEEPFILTERS(fact_fire[in_analysis] = 1))\nRETURN Result",
+    "reference": "vw_kpi_summary.area_ha",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Mean Size Ha",
+    "expression": "VAR Area = [Total Area Ha]\nVAR Records = [Total Records]\nRETURN DIVIDE(Area, Records)",
+    "reference": "vw_kpi_summary.mean_size_ha",
+    "format": "0.00"
+  },
+  {
+    "name": "Median Size Ha",
+    "expression": "VAR Result = CALCULATE(MEDIAN(fact_fire[size_ha]), KEEPFILTERS(fact_fire[in_analysis] = 1))\nRETURN Result",
+    "reference": "vw_kpi_summary.median_size_ha",
+    "format": "0.00"
+  },
+  {
+    "name": "Large Fire Records",
+    "expression": "VAR Result = CALCULATE([Total Records], KEEPFILTERS(fact_fire[is_large_fire] = 1))\nRETURN Result",
+    "reference": "vw_kpi_summary.large_fire_records",
+    "format": "#,0"
+  },
+  {
+    "name": "Large Fire Share",
+    "expression": "VAR Large = [Large Fire Records]\nRETURN DIVIDE(Large, [Total Records])",
+    "reference": "vw_kpi_summary.large_fire_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Area Share Top 3 Percent",
+    "expression": "VAR Eligible = CALCULATETABLE(\n    SELECTCOLUMNS(fact_fire, \"FireKey\", fact_fire[fire_key], \"Area\", fact_fire[size_ha]),\n    KEEPFILTERS(fact_fire[in_analysis] = 1))\nVAR N = COUNTROWS(Eligible)\nVAR K = ROUNDUP(N * 0.03, 0)\nVAR Largest = TOPN(K, Eligible, [Area], DESC, [FireKey], ASC)\nRETURN IF(N = 0, BLANK(), DIVIDE(SUMX(Largest, [Area]), SUMX(Eligible, [Area])))",
+    "reference": "vw_concentration.area_share; top_pct=3",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Pooled Top 3 Reference",
+    "expression": "VAR Result = CALCULATE([Area Share Top 3 Percent], ALLSELECTED(dim_agency))\nRETURN Result",
+    "reference": "vw_concentration.ALL at default scope",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Agency Top 3 Minimum",
+    "expression": "VAR Agencies = FILTER(ALLSELECTED(dim_agency), CALCULATE([Total Records]) > 0)\nRETURN MINX(Agencies, CALCULATE([Area Share Top 3 Percent]))",
+    "reference": "MIN agency shares excluding ALL",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Agency Top 3 Maximum",
+    "expression": "VAR Agencies = FILTER(ALLSELECTED(dim_agency), CALCULATE([Total Records]) > 0)\nRETURN MAXX(Agencies, CALCULATE([Area Share Top 3 Percent]))",
+    "reference": "MAX agency shares excluding ALL",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Exact Size Records",
+    "expression": "VAR SizePoint = SELECTEDVALUE(size_points[size_value])\nRETURN IF(ISBLANK(SizePoint), BLANK(), CALCULATE([Total Records], KEEPFILTERS(fact_fire[size_ha] = SizePoint)))",
+    "reference": "review_tables/heaping strict counts",
+    "format": "#,0"
+  },
+  {
+    "name": "Exact Size Share",
+    "expression": "VAR N = [Exact Size Records]\nRETURN DIVIDE(N, [Total Records])",
+    "reference": "review_tables/heaping strict shares",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Near Size Records",
+    "expression": "VAR SizePoint = SELECTEDVALUE(size_points[size_value])\nVAR Eligible = CALCULATETABLE(fact_fire, KEEPFILTERS(fact_fire[in_analysis] = 1))\nRETURN IF(ISBLANK(SizePoint), BLANK(), COUNTROWS(FILTER(Eligible, ABS(fact_fire[size_ha] - SizePoint) <= 0.00000001)))",
+    "reference": "review_tables/heaping near-value counts; diagnostic only",
+    "format": "#,0"
+  },
+  {
+    "name": "Source Records",
+    "expression": "VAR Result = CALCULATE(COUNTROWS(fact_fire), REMOVEFILTERS(fact_fire[in_analysis]),\n    KEEPFILTERS(dim_year[year_key] >= 2000), KEEPFILTERS(dim_year[year_key] <= 2025),\n    KEEPFILTERS(dim_agency[agency_code] <> \"PE\"))\nRETURN Result",
+    "reference": "vw_quality_trend.source_records; default fixed-agency period",
+    "format": "#,0"
+  },
+  {
+    "name": "Unknown Cause Share",
+    "expression": "VAR UnknownRecords = CALCULATE([Total Records], KEEPFILTERS(dim_cause[cause_class] = \"Unknown\"))\nRETURN DIVIDE(UnknownRecords, [Total Records])",
+    "reference": "vw_kpi_summary.unknown_cause_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Missing Report Date Share",
+    "expression": "VAR MissingRecords = CALCULATE([Total Records], KEEPFILTERS(fact_fire[missing_report_date] = 1))\nRETURN DIVIDE(MissingRecords, [Total Records])",
+    "reference": "vw_kpi_summary.missing_report_date_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Source Unknown Cause Share",
+    "expression": "VAR N = CALCULATE([Source Records], KEEPFILTERS(dim_cause[cause_class] = \"Unknown\"))\nRETURN DIVIDE(N, [Source Records])",
+    "reference": "vw_quality_trend.unknown_cause_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Source Missing Date Share",
+    "expression": "VAR N = CALCULATE([Source Records], KEEPFILTERS(fact_fire[missing_report_date] = 1))\nRETURN DIVIDE(N, [Source Records])",
+    "reference": "vw_quality_trend.missing_report_date_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "NFD Reconciliation Gap",
+    "expression": "VAR Result = BLANK()\nRETURN Result",
+    "reference": "Pending external evidence; never zero-filled",
+    "format": "0.0000%"
+  },
+  {
+    "name": "NFD Reconciliation Status",
+    "expression": "VAR StatusText = \"NFD reconciliation: pending; official matched totals not yet available\"\nRETURN StatusText",
+    "reference": "fact_nfd_annual is empty",
+    "format": "text"
+  },
+  {
+    "name": "Annual Area Ha",
+    "expression": "VAR Result = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month))\nRETURN Result",
+    "reference": "vw_annual_trend.area_ha; full years",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Annual Records",
+    "expression": "VAR Result = CALCULATE([Total Records], REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month))\nRETURN Result",
+    "reference": "vw_annual_trend.reported_records",
+    "format": "#,0"
+  },
+  {
+    "name": "YoY Area Change",
+    "expression": "VAR Y = SELECTEDVALUE(dim_year[year_key])\nVAR CurrentArea = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_year), REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month), dim_year[year_key] = Y)\nVAR PriorArea = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_year), REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month), dim_year[year_key] = Y - 1)\nRETURN IF(ISBLANK(Y) || Y <= 2000 || Y > 2025 || ISBLANK(CurrentArea) || ISBLANK(PriorArea), BLANK(), DIVIDE(CurrentArea - PriorArea, PriorArea))",
+    "reference": "vw_annual_trend.yoy_area_change",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Five Year Rolling Area Ha",
+    "expression": "VAR Y = SELECTEDVALUE(dim_year[year_key])\nVAR WindowYears = GENERATESERIES(Y - 4, Y, 1)\nVAR AnnualValues = ADDCOLUMNS(WindowYears, \"AnnualArea\",\n    VAR WY = [Value]\n    RETURN CALCULATE([Total Area Ha], REMOVEFILTERS(dim_year), REMOVEFILTERS(dim_date), REMOVEFILTERS(dim_month), dim_year[year_key] = WY))\nVAR PopulatedYears = COUNTROWS(FILTER(AnnualValues, NOT ISBLANK([AnnualArea])))\nRETURN IF(ISBLANK(Y) || Y < 2004 || Y > 2025 || PopulatedYears <> 5, BLANK(), AVERAGEX(AnnualValues, [AnnualArea]))",
+    "reference": "vw_annual_trend.five_year_mean_area",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Observed Years",
+    "expression": "VAR Years = FILTER(VALUES(dim_year[year_key]), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025)\nRETURN COUNTROWS(FILTER(Years, CALCULATE([Annual Records]) > 0))",
+    "reference": "vw_decades.years_observed",
+    "format": "#,0"
+  },
+  {
+    "name": "Mean Annual Area Ha",
+    "expression": "VAR Result = DIVIDE([Annual Area Ha], [Observed Years])\nRETURN Result",
+    "reference": "vw_decades.mean_annual_area",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Mean Annual Area Without 2023 Ha",
+    "expression": "VAR Result = CALCULATE([Mean Annual Area Ha], KEEPFILTERS(dim_year[year_key] <> 2023))\nRETURN Result",
+    "reference": "review_tables/decade_sensitivity mean",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Area Reconciliation Note",
+    "expression": "VAR NoteText = \"2023 total: pending NFD reconciliation\"\nRETURN NoteText",
+    "reference": "Presentation status, not numeric validation",
+    "format": "text"
+  },
+  {
+    "name": "Cause Record Share",
+    "expression": "VAR Denominator = CALCULATE([Total Records], REMOVEFILTERS(dim_cause))\nRETURN DIVIDE([Total Records], Denominator)",
+    "reference": "vw_cause.count_share; also pooled cause table",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Cause Area Share",
+    "expression": "VAR Denominator = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_cause))\nRETURN DIVIDE([Total Area Ha], Denominator)",
+    "reference": "vw_cause.area_share; also pooled cause table",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Natural Cause Record Share",
+    "expression": "VAR N = CALCULATE([Total Records], REMOVEFILTERS(dim_cause), dim_cause[cause_code] = \"N\")\nVAR D = CALCULATE([Total Records], REMOVEFILTERS(dim_cause))\nRETURN DIVIDE(N, D)",
+    "reference": "review_tables/causes Natural/lightning",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Natural Cause Area Share",
+    "expression": "VAR N = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_cause), dim_cause[cause_code] = \"N\")\nVAR D = CALCULATE([Total Area Ha], REMOVEFILTERS(dim_cause))\nRETURN DIVIDE(N, D)",
+    "reference": "review_tables/causes Natural/lightning",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Human Cause Record Share",
+    "expression": "VAR N = CALCULATE([Total Records], REMOVEFILTERS(dim_cause), dim_cause[cause_code] = \"H\")\nVAR D = CALCULATE([Total Records], REMOVEFILTERS(dim_cause))\nRETURN DIVIDE(N, D)",
+    "reference": "review_tables/causes Human",
+    "format": "0.0000%"
+  },
+  {
+    "name": "NT Records",
+    "expression": "VAR Result = CALCULATE([Total Records], KEEPFILTERS(dim_agency[agency_code] = \"NT\"))\nRETURN Result",
+    "reference": "review_tables/nt_response record denominator",
+    "format": "#,0"
+  },
+  {
+    "name": "NT Area Ha",
+    "expression": "VAR Result = CALCULATE([Total Area Ha], KEEPFILTERS(dim_agency[agency_code] = \"NT\"))\nRETURN Result",
+    "reference": "review_tables/nt_response area denominator",
+    "format": "#,0.00"
+  },
+  {
+    "name": "NT Response Record Share",
+    "expression": "VAR D = CALCULATE([NT Records], REMOVEFILTERS(dim_response))\nRETURN DIVIDE([NT Records], D)",
+    "reference": "review_tables/nt_response.record_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "NT Response Area Share",
+    "expression": "VAR D = CALCULATE([NT Area Ha], REMOVEFILTERS(dim_response))\nRETURN DIVIDE([NT Area Ha], D)",
+    "reference": "review_tables/nt_response.area_share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "NT Monitored Modified Area Share",
+    "expression": "VAR N = CALCULATE([NT Area Ha], REMOVEFILTERS(dim_response), dim_response[response_code] IN {\"MON\", \"MOD\"})\nVAR D = CALCULATE([NT Area Ha], REMOVEFILTERS(dim_response))\nRETURN DIVIDE(N, D)",
+    "reference": "MON+MOD area / all NT selected area, including Unknown",
+    "format": "0.0000%"
+  },
+  {
+    "name": "NT Classification Population",
+    "expression": "VAR N = CALCULATE([NT Records], REMOVEFILTERS(dim_response), dim_response[response_code] IN {\"FUL\", \"MON\", \"MOD\"})\nVAR D = CALCULATE([NT Records], REMOVEFILTERS(dim_response))\nRETURN DIVIDE(N, D)",
+    "reference": "Selected NT populated standard-class record share",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Valid Month Records",
+    "expression": "VAR Result = CALCULATE([Total Records], KEEPFILTERS(dim_month[month_key] >= 1))\nRETURN Result",
+    "reference": "Sum vw_seasonality valid months",
+    "format": "#,0"
+  },
+  {
+    "name": "Unknown Month Records",
+    "expression": "VAR Result = CALCULATE([Total Records], REMOVEFILTERS(dim_month), dim_month[month_key] = -1)\nRETURN Result",
+    "reference": "vw_seasonality month_num=-1",
+    "format": "#,0"
+  },
+  {
+    "name": "Monthly Record Share",
+    "expression": "VAR D = CALCULATE([Valid Month Records], REMOVEFILTERS(dim_month))\nRETURN DIVIDE([Valid Month Records], D)",
+    "reference": "Valid-month record distribution",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Mapped Area Ha",
+    "expression": "VAR Result = CALCULATE([Total Area Ha], KEEPFILTERS(dim_grid[grid_cell] <> \"Unknown\"))\nRETURN Result",
+    "reference": "SUM vw_grid.area_ha",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Unmappable Records",
+    "expression": "VAR Result = CALCULATE([Total Records], REMOVEFILTERS(dim_grid), dim_grid[grid_cell] = \"Unknown\")\nRETURN Result",
+    "reference": "Selected records with grid_cell NULL",
+    "format": "#,0"
+  },
+  {
+    "name": "Mapped Top Five Cell Share",
+    "expression": "VAR Cells = FILTER(ALLSELECTED(dim_grid), dim_grid[grid_cell] <> \"Unknown\")\nVAR Areas = ADDCOLUMNS(Cells, \"CellArea\", CALCULATE([Total Area Ha]))\nVAR Largest = TOPN(5, Areas, [CellArea], DESC, dim_grid[grid_cell], ASC)\nRETURN DIVIDE(SUMX(Largest, [CellArea]), SUMX(Areas, [CellArea]))",
+    "reference": "Top five vw_grid.area_ha / mapped area",
+    "format": "0.0000%"
+  },
+  {
+    "name": "Large Fire Share Label",
+    "expression": "VAR P = [Large Fire Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Area Share Top 3 Percent Label",
+    "expression": "VAR P = [Area Share Top 3 Percent]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Pooled Top 3 Reference Label",
+    "expression": "VAR P = [Pooled Top 3 Reference]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Agency Top 3 Minimum Label",
+    "expression": "VAR P = [Agency Top 3 Minimum]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Agency Top 3 Maximum Label",
+    "expression": "VAR P = [Agency Top 3 Maximum]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Exact Size Share Label",
+    "expression": "VAR P = [Exact Size Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Unknown Cause Share Label",
+    "expression": "VAR P = [Unknown Cause Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Missing Report Date Share Label",
+    "expression": "VAR P = [Missing Report Date Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Source Unknown Cause Share Label",
+    "expression": "VAR P = [Source Unknown Cause Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Source Missing Date Share Label",
+    "expression": "VAR P = [Source Missing Date Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "NFD Reconciliation Gap Label",
+    "expression": "VAR P = [NFD Reconciliation Gap]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "YoY Area Change Label",
+    "expression": "VAR P = [YoY Area Change]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Cause Record Share Label",
+    "expression": "VAR P = [Cause Record Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Cause Area Share Label",
+    "expression": "VAR P = [Cause Area Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Natural Cause Record Share Label",
+    "expression": "VAR P = [Natural Cause Record Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Natural Cause Area Share Label",
+    "expression": "VAR P = [Natural Cause Area Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Human Cause Record Share Label",
+    "expression": "VAR P = [Human Cause Record Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "NT Response Record Share Label",
+    "expression": "VAR P = [NT Response Record Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "NT Response Area Share Label",
+    "expression": "VAR P = [NT Response Area Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "NT Monitored Modified Area Share Label",
+    "expression": "VAR P = [NT Monitored Modified Area Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "NT Classification Population Label",
+    "expression": "VAR P = [NT Classification Population]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Monthly Record Share Label",
+    "expression": "VAR P = [Monthly Record Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Mapped Top Five Cell Share Label",
+    "expression": "VAR P = [Mapped Top Five Cell Share]\nVAR Magnitude = ABS(P)\nVAR SignText = IF(P < 0, \"decrease \", \"\")\nRETURN SWITCH(TRUE(),\n    ISBLANK(P), \"Not available\",\n    P = 0, \"0%\",\n    P = 1, \"100%\",\n    P = -1, \"-100%\",\n    Magnitude < 0.01, SignText & \"under 1%\",\n    Magnitude > 0.99 && Magnitude < 1, SignText & \"over 99%\",\n    Magnitude > 1 && Magnitude < 1.01, SignText & \"over 100%\",\n    FORMAT(P, \"0%\"))",
+    "reference": "Display-only companion; precise numeric measure retained",
+    "format": "text"
+  },
+  {
+    "name": "Agency Concentration Range Label",
+    "expression": "VAR LowLabel = [Agency Top 3 Minimum Label]\nVAR HighLabel = [Agency Top 3 Maximum Label]\nRETURN LowLabel & \" to \" & HighLabel",
+    "reference": "Executive answer card value, not a dynamic sentence",
+    "format": "text"
+  },
+  {
+    "name": "Mean vs Median Gap Ha",
+    "expression": "VAR Gap = [Mean Size Ha] - [Median Size Ha]\nRETURN Gap",
+    "reference": "vw_kpi_summary mean minus median",
+    "format": "#,0.00"
+  },
+  {
+    "name": "Scope Agency Count",
+    "expression": "VAR Agencies = FILTER(VALUES(dim_agency[agency_key]), CALCULATE([Total Records]) > 0)\nRETURN COUNTROWS(Agencies)",
+    "reference": "Distinct reporting agencies with selected records in current context",
+    "format": "#,0"
+  },
+  {
+    "name": "Scope Subtitle",
+    "expression": "VAR Years = FILTER(VALUES(dim_year[year_key]), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025)\nVAR FirstYear = MINX(Years, dim_year[year_key])\nVAR LastYear = MAXX(Years, dim_year[year_key])\nVAR Agencies = [Scope Agency Count]\nRETURN IF(ISBLANK(FirstYear), \"No matching scope\", \"Fixed reporting-agency series | \" & FORMAT(FirstYear,\"0\") & \"\u2013\" & FORMAT(LastYear,\"0\") & \" | \" & FORMAT(Agencies,\"0\") & \" reporting agencies | Counts: reported records; area: summed SIZE_HA in ha, not unique land.\")",
+    "reference": "Current dimension context and approved analysis scope",
+    "format": "text"
+  },
+  {
+    "name": "NT Scope Subtitle",
+    "expression": "VAR Years = FILTER(VALUES(dim_year[year_key]), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025)\nVAR FirstYear = MINX(Years, dim_year[year_key])\nVAR LastYear = MAXX(Years, dim_year[year_key])\nRETURN IF(ISBLANK(FirstYear), \"No matching scope\", \"Northwest Territories reporting agency | \" & FORMAT(FirstYear,\"0\") & \"\u2013\" & FORMAT(LastYear,\"0\") & \" | 1 reporting agency | Record and reported-area shares include Unknown; FUL full, MOD modified, MON monitored.\")",
+    "reference": "NT-only period and definitions, not a headline",
+    "format": "text"
+  },
+  {
+    "name": "Source Version",
+    "expression": "VAR VersionText = SELECTEDVALUE(load_batch[source_version], \"Multiple source versions\")\nRETURN \"Source version: \" & VersionText",
+    "reference": "load_batch.source_version",
+    "format": "text"
+  }
+]

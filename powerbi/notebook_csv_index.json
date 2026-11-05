@@ -1,0 +1,33 @@
+{
+  "notebooks": [
+    "notebooks/01_data_quality_and_coverage.ipynb",
+    "notebooks/02_burden_patterns.ipynb",
+    "notebooks/03_colab_research_review.ipynb"
+  ],
+  "analysis_csvs": [
+    "data/processed/review_tables/agency_top3.csv",
+    "data/processed/review_tables/causes.csv",
+    "data/processed/review_tables/decade_sensitivity.csv",
+    "data/processed/review_tables/decades.csv",
+    "data/processed/review_tables/heaping.csv",
+    "data/processed/review_tables/national_segments.csv",
+    "data/processed/review_tables/nt_response.csv",
+    "data/processed/review_tables/pooling_comparison.csv"
+  ],
+  "powerbi_model_csvs": [
+    "powerbi/data/dim_agency.csv",
+    "powerbi/data/dim_cause.csv",
+    "powerbi/data/dim_date.csv",
+    "powerbi/data/dim_grid.csv",
+    "powerbi/data/dim_month.csv",
+    "powerbi/data/dim_response.csv",
+    "powerbi/data/dim_size_class.csv",
+    "powerbi/data/dim_year.csv",
+    "powerbi/data/fact_fire.csv",
+    "powerbi/data/fact_nfd_annual.csv",
+    "powerbi/data/load_batch.csv",
+    "powerbi/data/size_points.csv"
+  ],
+  "note": "Executed notebooks and their CSV tables are included in the asset-review package. Notebook reruns use the full project source and bundled local warehouse; raw source is fetched separately.",
+  "excel_workbook": "Canada_Wildfire_Review.xlsx"
+}

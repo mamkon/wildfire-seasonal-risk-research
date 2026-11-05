@@ -1,0 +1,4 @@
+cause_code,cause_class,source_note
+H,Human,Source attribute XML CAUSE definition
+N,Natural/lightning,Source attribute XML CAUSE definition
+U,Unknown,Source attribute XML CAUSE definition

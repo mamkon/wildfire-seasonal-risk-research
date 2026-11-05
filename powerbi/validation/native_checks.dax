@@ -1,0 +1,11 @@
+// Run only after measures and relationships exist in Desktop/DAX Studio.
+EVALUATE ROW("Records", [Total Records], "AreaHa", [Total Area Ha],
+ "MedianHa", [Median Size Ha], "Top3", [Area Share Top 3 Percent],
+ "MinimumAgencyTop3", [Agency Top 3 Minimum], "MaximumAgencyTop3", [Agency Top 3 Maximum],
+ "NTCombinedAreaShare", [NT Monitored Modified Area Share])
+// Compare the default scope to reference_kpis.csv and validation/*.csv.
+// Annual check: use dim_year, not DATEADD or SAMEPERIODLASTYEAR.
+EVALUATE SUMMARIZECOLUMNS(dim_year[year_key],
+ FILTER(ALL(dim_year), dim_year[year_key] >= 2000 && dim_year[year_key] <= 2025),
+ "AreaHa", [Annual Area Ha], "YoY", [YoY Area Change], "Rolling", [Five Year Rolling Area Ha])
+ORDER BY dim_year[year_key]
