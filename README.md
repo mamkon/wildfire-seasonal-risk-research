@@ -21,10 +21,10 @@ Agencies record small fires differently. I checked how often each agency records
 | --- | --- |
 | **Python** | Profiled the source data, preserved exclusion flags, independently checked the SQL results, and produced the notebooks and charts. |
 | **SQL / SQLite** | Built the fact and dimension tables and calculated annual totals, seasonal counts, cause shares, and recording checks. |
-| **Power BI Desktop** | Built nine report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
+| **Power BI Desktop** | Built 13 report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
 | **Excel** | Packaged summary tables and denominator checks for spreadsheet review. |
 
-Open the [Power BI project](dashboard/Canada%20Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the `.pbip` file. On the first open, select **Refresh now** if Desktop prompts you to load the embedded summaries. The Executive Summary places a Canadian area map beside annual, monthly and cause charts. The map is a fixed view of rounded coordinate cells across the analysis window. The separate Map page ranks those cells. Record-level slicers and drill-through remain outstanding. [Build guide](powerbi/BUILD_GUIDE.md)
+Open the [Power BI project](dashboard/Canada%20Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the `.pbip` file. On the first open, select **Refresh now** if Desktop prompts you to load the embedded summaries. The Executive Summary includes native KPI cards, benchmark gauges, a cause-coding donut, and Azure Maps. Use the map buttons to switch between historical locations, recorded-area heat, and coordinate-cell clusters. Forest Watch and Carbon Flux identify the external data needed for those views. The maps use rounded coordinate cells and exclude 207 records without plottable coordinates. [Build guide](powerbi/BUILD_GUIDE.md)
 
 The Executive Summary layout draws on the [SAS Visual Analytics wildfire dashboard](https://communities.sas.com/t5/SAS-Visual-Analytics-Gallery/Fighting-the-Amazon-forest-fires-with-advanced-analytics/ta-p/784221). The Canadian boundary layer comes from [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/).
 

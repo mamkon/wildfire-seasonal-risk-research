@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "f14747f20efae2b1d59c",
   "position": {
-    "x": 29,
-    "y": 65,
-    "width": 530,
-    "height": 26,
-    "z": 679,
-    "tabOrder": 679
+    "x": 84,
+    "y": 60,
+    "width": 465,
+    "height": 29,
+    "z": 684,
+    "tabOrder": 684
   },
   "visual": {
     "visualType": "textbox",
@@ -19,10 +19,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Historical review  ·  2000–2025  ·  12 agencies  ·  DRAFT: VERIFY",
+                    "value": "2000–2025 · 12 reporting agencies · DRAFT: VERIFY",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "11pt",
+                      "fontSize": "10pt",
                       "color": "#F2E6D8"
                     }
                   }

@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
   "name": "d96098be78a83e2e01fe",
   "position": {
-    "x": 29,
-    "y": 18,
-    "width": 530,
-    "height": 44,
-    "z": 209,
-    "tabOrder": 209
+    "x": 84,
+    "y": 16,
+    "width": 460,
+    "height": 45,
+    "z": 244,
+    "tabOrder": 244
   },
   "visual": {
     "visualType": "textbox",
@@ -22,7 +22,7 @@
                     "value": "Canada Wildfire Dashboard",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "23pt",
+                      "fontSize": "21pt",
                       "color": "#F2E6D8",
                       "fontWeight": "bold"
                     }
