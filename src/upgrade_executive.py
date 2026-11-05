@@ -131,7 +131,7 @@ def map_slicers(page, x):
                         }
                     }
                 ],
-                "items": [{"properties": {"fontColor": color(CREAM)}}],
+                "items": [{"properties": {"fontColor": color(CREAM), "background": color("#1A1A1E")}}],
             },
             visualContainerObjects={
                 "padding": properties(top="6D", bottom="6D", left="8D", right="8D"),
