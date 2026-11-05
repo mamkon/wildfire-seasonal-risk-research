@@ -228,8 +228,9 @@ def executive_page(page):
         ]
     ):
         x = 554 + 173 * i
-        note(page, label, label, x, 22, 165, 25, 9, "#FFD291", True)
-        note(page, value, value, x, 48, 165, 39, 15, bold=True)
+        note(page, label, label, x, 19, 165, 30, 9, "#FFD291", True)
+        value_size = 11 if label == "AGENCY RANGE" else 15
+        note(page, value, value, x, 49, 165, 44, value_size, bold=True)
 
     chart(
         page,
