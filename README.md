@@ -1,18 +1,42 @@
-# Canada Wildfire Intelligence (2000–2025)
+# Canada Wildfire Intelligence & Large-Fire Triage
 
-**Geospatial reporting, data lineage, and large-fire triage**
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-2b5b84.svg)](https://www.python.org/)
+[![Power BI Project](https://img.shields.io/badge/Power_BI-Project-f2c811.svg)](dashboard/README.md)
+[![scikit-learn gradient boosting](https://img.shields.io/badge/scikit--learn-Gradient_Boosting-f39c12.svg)](modeling/README.md)
+![Status: retrospective research](https://img.shields.io/badge/Status-Retrospective_Research-357A72.svg)
 
-**Situation.** Fire records from different agencies can reflect different recording practices. For seasonal planning, I wanted to see when the workload was highest, where recorded fire area was concentrated, and which comparisons needed more caution.
+## Decision summary
 
-**Task.** I built an auditable Power BI project using 26 reporting years from the Canadian National Fire Database (CNFDB). The fixed study scope covers 168,276 records from 12 reporting agencies and sums 83.99 million hectares of recorded fire sizes.
+I built this project around two planning questions. **When does recorded workload peak?** July had **3.07×** the average calendar-month record count, a starting point for seasonal staffing discussions. **How concentrated is the area burden?** The largest **3% of records account for 96.2% of pooled recorded area**, with shares ranging from **59% to over 99%** across agencies. That variation matters when reviewing capacity for large events.
 
-**Action.** I traced the source records through the SQLite warehouse to the dashboard, grouped locations into rounded coordinate cells, and kept the executive indicators at the full study scope. The Trust page shows how agencies record small fire sizes and separates the published national comparison from pending jurisdiction-level reconciliation.
+The Power BI project covers **168,276 records from 12 reporting agencies across 2000–2025**, drawn from the Canadian National Fire Database. The companion retrospective model asks whether an already recorded fire eventually reached **200 hectares**. The report describes historical burden. The model tests the trade-off between missed large fires and additional manual reviews.
 
-**Result.** The report lets readers compare July's historical record volume with the monthly benchmark and explore recorded area by province or territory and year. The concentration page shows how much of each agency's area came from its largest events, which helps frame where large-event capacity merits closer review.
+[Open the Power BI project](dashboard/Canada_Wildfire.pbip) · [Read the modeling case study](modeling/README.md) · [View the portfolio page](https://mamkon.github.io/wildfire-triage/)
 
-![Annual recorded fire area and the five-year mean](images/annual_burden.png)
+## Predictive triage architecture
 
-**Companion modeling case study** · [Can we flag recorded Canadian wildfires that reach 200 hectares?](modeling/README.md)
+[![Five-stage wildfire triage workflow with the held-out test scorecard](modeling/assets/pipeline_workflow.png)](modeling/assets/pipeline_workflow.png)
+
+I trained on **2000–2019** (132,037 records), chose the cutoff on **2020–2022** (16,296 records), and tested the frozen rule on **2023–2025** (18,814 records). Gradient boosting averaged **0.369** average precision over five forward validation folds, with a standard deviation of **0.071**. The inputs were report month, reporting agency, latitude, and longitude. Missing-value handling, coordinate scaling, and one-hot encoding were fitted inside each training fold.
+
+I treated one missed large fire as equivalent to ten extra reviews in the calibration scenario. The resulting score cutoff was **0.0425** when rounded for display. It was fixed before testing. The archive does not establish whether those inputs were available and unchanged at first dispatch, so this evaluation supports retrospective planning discussions.
+
+## Held-out performance
+
+| Metric | Result | What it measures |
+| --- | ---: | --- |
+| Area under the receiver operating characteristic curve | 0.838 | How well the scores rank records that reached 200 hectares above smaller fires. |
+| Recall (sensitivity) | 73.9% | Share of fires that reached 200 hectares that the rule flagged. |
+| Precision | 28.3% | Share of flagged records that reached 200 hectares. |
+| Specificity | 77.4% | Share of fires below 200 hectares that the rule cleared. |
+| Manual review share | 28.1% | Share of all test records the rule would send for review. |
+
+| Final recorded size | Cleared by the rule | Flagged for review |
+| --- | ---: | ---: |
+| Below 200 hectares | 12,994 correctly cleared | 3,793 extra reviews |
+| At least 200 hectares | **529 missed large fires** | 1,498 large fires flagged |
+
+[Threshold comparisons and reproduction steps](modeling/README.md#asymmetric-error-and-decision-boundary-stress-test) · [Evaluation results](modeling/results/evaluation.json)
 
 ## What I found
 
