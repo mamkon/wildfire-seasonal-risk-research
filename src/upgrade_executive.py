@@ -131,7 +131,9 @@ def map_slicers(page, x):
                         }
                     }
                 ],
-                "items": [{"properties": {"fontColor": color(CREAM), "background": color("#1A1A1E")}}],
+                "items": [
+                    {"properties": {"fontColor": color(CREAM), "background": color("#1A1A1E")}}
+                ],
             },
             visualContainerObjects={
                 "padding": properties(top="6D", bottom="6D", left="8D", right="8D"),
@@ -273,8 +275,8 @@ def executive(page):
         sort=("Year", False, "Ascending"),
     )
     for x, name, bound, target in [
-        (14, "July records", "Month scale", "Average known month"),
-        (254, "Area in largest 3%", "Share scale", None),
+        (14, "July Surge Ratio", "July ratio scale", "July parity"),
+        (254, "Top 3 Pct Area Share", "Share scale", None),
     ]:
         roles = {"Y": [measure(name)], "MaxValue": [measure(bound)]}
         if target:
@@ -342,7 +344,7 @@ def executive(page):
     pbi.note(
         page,
         "decision",
-        "Plan for July volume and reserve capacity for large events. The July gauge marker is the average known-month count.",
+        "Plan for July volume and reserve capacity for large events. The July gauge marker is 1× the average known-month count.",
         15,
         660,
         1250,
@@ -435,6 +437,19 @@ def geographic_grid(db):
     ]
 
 
+def gauge_measures():
+    return [
+        ("July Surge Ratio", "DIVIDE([July records], [Average known month])", '0.00"x"'),
+        ("July ratio scale", "MAX(2, ROUNDUP([July Surge Ratio], 0))", '0"x"'),
+        ("July parity", "1", '0"x"'),
+        (
+            "Top 3 Pct Area Share",
+            "DIVIDE([Area in largest 3% (million ha)], [Recorded area])",
+            "0.0%",
+        ),
+    ]
+
+
 def model_tables(path):
     database = pbi.ROOT / "data/warehouse/wildfire.db"
     with sqlite3.connect(f"{database.resolve().as_uri()}?mode=ro", uri=True) as db:
@@ -443,15 +458,13 @@ def model_tables(path):
             FROM fact_fire WHERE in_analysis = 1""").fetchone()
         known_months = db.execute("""SELECT month_key, COUNT(*) FROM fact_fire
             WHERE in_analysis = 1 AND month_key BETWEEN 1 AND 12 GROUP BY month_key""").fetchall()
+        top_area = db.execute(
+            "SELECT SUM(size_ha) FROM vw_pareto WHERE position <= ?", ((count * 3 + 99) // 100,)
+        ).fetchone()[0]
         grid = geographic_grid(db)
     assert count == 168276 and round(area, 2) == 83988359.25
     assert dict(known_months)[7] == 42235 and max(known_months, key=lambda row: row[1])[0] == 7
     assert last_date and last_date.startswith("2025-")
-    concentration = next(
-        float(row["area_share"])
-        for row in pbi.rows("review_tables/agency_top3.csv")
-        if row["reporting_agency"] == "ALL"
-    )
     unknown = next(
         int(row["records"])
         for row in pbi.rows("review_tables/causes.csv")
@@ -489,8 +502,8 @@ def model_tables(path):
         ("Latest report date", f'"{last_date}"', None),
         ("July records", "42235", "#,0"),
         ("Average known month", str(sum(row[1] for row in known_months) / 12), "#,0"),
-        ("Month scale", "50000", "#,0"),
-        ("Area in largest 3%", str(concentration), "0%"),
+        ("Area in largest 3% (million ha)", str(top_area / 1e6), "#,0.00"),
+        *gauge_measures(),
         ("Share scale", "1", "0%"),
     ]
     pbi.TABLES[-1]["measures"] = [

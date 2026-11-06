@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "2aff906e562a96a10fe5",
+  "name": "e6b681e2190dedb69e09",
   "position": {
     "x": 254,
     "y": 371,
@@ -23,11 +23,11 @@
                       "Entity": "Executive Metrics"
                     }
                   },
-                  "Property": "Area in largest 3%"
+                  "Property": "Top 3 Pct Area Share"
                 }
               },
-              "queryRef": "Executive Metrics.Area in largest 3%",
-              "nativeQueryRef": "Area in largest 3%",
+              "queryRef": "Executive Metrics.Top 3 Pct Area Share",
+              "nativeQueryRef": "Top 3 Pct Area Share",
               "active": true
             }
           ]
@@ -189,7 +189,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Area in largest 3%'"
+                  "Value": "'Top 3 Pct Area Share'"
                 }
               }
             }

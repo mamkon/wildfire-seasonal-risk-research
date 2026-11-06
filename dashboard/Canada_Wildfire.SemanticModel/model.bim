@@ -669,19 +669,34 @@
             "formatString": "#,0"
           },
           {
-            "name": "Month scale",
-            "expression": "50000",
-            "formatString": "#,0"
-          },
-          {
-            "name": "Area in largest 3%",
-            "expression": "0.9621330121848282",
-            "formatString": "0%"
-          },
-          {
             "name": "Share scale",
             "expression": "1",
             "formatString": "0%"
+          },
+          {
+            "name": "Area in largest 3% (million ha)",
+            "expression": "80.80797307770177",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "July Surge Ratio",
+            "expression": "DIVIDE([July records], [Average known month])",
+            "formatString": "0.00\"x\""
+          },
+          {
+            "name": "July ratio scale",
+            "expression": "MAX(2, ROUNDUP([July Surge Ratio], 0))",
+            "formatString": "0\"x\""
+          },
+          {
+            "name": "July parity",
+            "expression": "1",
+            "formatString": "0\"x\""
+          },
+          {
+            "name": "Top 3 Pct Area Share",
+            "expression": "DIVIDE([Area in largest 3% (million ha)], [Recorded area])",
+            "formatString": "0.0%"
           }
         ]
       }

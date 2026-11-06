@@ -56,8 +56,8 @@ The Power BI project shortcut (`.pbip`) opens the report. The report's `definiti
 | --- | --- |
 | **Azure Maps** | 168,069 records contribute to 1,121 rounded coordinate cells. Locations, heat and clusters show historical records at cell level. The province or territory and year dropdowns filter those views while the executive indicators retain the full study scope. |
 | **Geographic assignment** | Original coordinates are matched to Natural Earth province and territory boundaries before rounding. The 2,275 plottable records without a boundary match appear as **Unassigned**. A separate 207 records have no plottable coordinates and are omitted from the maps. |
-| **July benchmark** | The gauge compares 42,235 July records with the average of 13,738 records per calendar month, pooled across the study years and calculated from records with a known month. |
-| **Area concentration** | The largest 3% of records account for about 96% of pooled recorded area. The agency-by-agency comparison ranges from 59% to over 99%. |
+| **July benchmark** | The gauge shows **3.07×**. It divides 42,235 July records by the average of 13,738 records per calendar month across the study period. The **1×** marker represents that average. |
+| **Area concentration** | The largest 3% of records account for **96.2%** of pooled recorded area. The agency-by-agency comparison ranges from 59% to over 99%. |
 | **Cause coding** | The donut shows 160,515 records with a known cause and 7,761 with an unknown cause. The source provides no detection confidence score. |
 | **Trust and reconciliation** | The full 2023 source-year count and rounded area match the national table in the 2025 annual report. The narrower analytical total remains **pending National Forestry Database reconciliation**. |
 | **Forest Watch and Carbon Flux** | These pages describe the external forest-change and carbon datasets needed to support those views. |

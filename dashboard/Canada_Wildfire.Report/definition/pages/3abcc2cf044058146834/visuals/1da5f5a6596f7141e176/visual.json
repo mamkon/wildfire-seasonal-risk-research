@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.0.0/schema.json",
-  "name": "16ddec1da29c657c62e9",
+  "name": "1da5f5a6596f7141e176",
   "position": {
     "x": 14,
     "y": 371,
@@ -23,11 +23,11 @@
                       "Entity": "Executive Metrics"
                     }
                   },
-                  "Property": "July records"
+                  "Property": "July Surge Ratio"
                 }
               },
-              "queryRef": "Executive Metrics.July records",
-              "nativeQueryRef": "July records",
+              "queryRef": "Executive Metrics.July Surge Ratio",
+              "nativeQueryRef": "July Surge Ratio",
               "active": true
             }
           ]
@@ -42,11 +42,11 @@
                       "Entity": "Executive Metrics"
                     }
                   },
-                  "Property": "Month scale"
+                  "Property": "July ratio scale"
                 }
               },
-              "queryRef": "Executive Metrics.Month scale",
-              "nativeQueryRef": "Month scale",
+              "queryRef": "Executive Metrics.July ratio scale",
+              "nativeQueryRef": "July ratio scale",
               "active": true
             }
           ]
@@ -61,11 +61,11 @@
                       "Entity": "Executive Metrics"
                     }
                   },
-                  "Property": "Average known month"
+                  "Property": "July parity"
                 }
               },
-              "queryRef": "Executive Metrics.Average known month",
-              "nativeQueryRef": "Average known month",
+              "queryRef": "Executive Metrics.July parity",
+              "nativeQueryRef": "July parity",
               "active": true
             }
           ]
@@ -208,7 +208,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'July records'"
+                  "Value": "'July Surge Ratio'"
                 }
               }
             }
