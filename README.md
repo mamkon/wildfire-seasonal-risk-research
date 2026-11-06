@@ -1,6 +1,14 @@
-# Canada wildfire seasonal risk research
+# Canada Wildfire Intelligence (2000–2025)
 
-I built this project to answer a practical planning question: **when do agencies record the most fires, and when do a few large events drive most of the area?** I used the Canadian National Fire Database (CNFDB) point records for 2000–2025. The analysis covers 168,276 records from a fixed set of 12 reporting agencies and sums 83.99 million hectares of recorded fire sizes.
+**Geospatial reporting, data lineage, and large-fire triage**
+
+**Situation.** Fire records from different agencies can reflect different recording practices. For seasonal planning, I wanted to see when the workload was highest, where recorded fire area was concentrated, and which comparisons needed more caution.
+
+**Task.** I built an auditable Power BI project using 26 reporting years from the Canadian National Fire Database (CNFDB). The fixed study scope covers 168,276 records from 12 reporting agencies and sums 83.99 million hectares of recorded fire sizes.
+
+**Action.** I traced the source records through the SQLite warehouse to the dashboard, grouped locations into rounded coordinate cells, and kept the executive indicators at the full study scope. The Trust page shows how agencies record small fire sizes and separates the published national comparison from pending jurisdiction-level reconciliation.
+
+**Result.** The report lets readers compare July's historical record volume with the monthly benchmark and explore recorded area by province or territory and year. The concentration page shows how much of each agency's area came from its largest events, which helps frame where large-event capacity merits closer review.
 
 ![Annual recorded fire area and the five-year mean](images/annual_burden.png)
 
@@ -22,11 +30,39 @@ Agencies record small fires differently. I checked how often each agency records
 | Tool | Role in the project |
 | --- | --- |
 | **Python** | Profiled the source data, preserved exclusion flags, independently checked the SQL results, and produced the notebooks and charts. |
-| **SQL / SQLite** | Built the fact and dimension tables and calculated annual totals, seasonal counts, cause shares, and recording checks. |
+| **Structured Query Language (SQL) / SQLite** | Built the fact and dimension tables and calculated annual totals, seasonal counts, cause shares, and recording checks. |
 | **Power BI Desktop** | Built 13 report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
 | **Excel** | Packaged summary tables and denominator checks for spreadsheet review. |
 
-Open the [Power BI project](dashboard/Canada_Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the `.pbip` file. On the first open, select **Refresh now** if Desktop prompts you to load the embedded summaries. The Executive Summary includes native KPI cards, benchmark gauges, a cause-coding donut, and Azure Maps. Use the map buttons to switch between historical locations, recorded-area heat, and coordinate-cell clusters. Forest Watch and Carbon Flux identify the external data needed for those views. The Province or territory and Year dropdowns filter the maps while executive KPIs retain the full study scope. Geographic labels use the original coordinates and [Natural Earth province and territory boundaries](https://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-1-states-provinces/). The maps use rounded coordinate cells and exclude 207 records without plottable coordinates. [Build guide](powerbi/BUILD_GUIDE.md)
+Open the [Power BI project](dashboard/Canada_Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the project shortcut. Select **Refresh now** if Desktop prompts you to load the embedded summaries. [Build guide](powerbi/BUILD_GUIDE.md)
+
+## Geospatial and semantic model architecture
+
+```text
+dashboard/
+├── Canada_Wildfire.pbip
+├── Canada_Wildfire.Report/
+│   ├── definition.pbir
+│   ├── definition/
+│   └── StaticResources/
+└── Canada_Wildfire.SemanticModel/
+    ├── definition.pbism
+    └── model.bim
+```
+
+The Power BI project shortcut (`.pbip`) opens the report. The report's `definition.pbir` links to the local semantic model using `byPath`. The report's `definition/` folder holds page and visual definitions. The GitHub model stores its Data Analysis Expressions (DAX) measures and Power Query M queries in `model.bim`.
+
+| Report control | What it shows |
+| --- | --- |
+| **Azure Maps** | 168,069 records contribute to 1,121 rounded coordinate cells. Locations, heat and clusters show historical records at cell level. The province or territory and year dropdowns filter those views while the executive indicators retain the full study scope. |
+| **Geographic assignment** | Original coordinates are matched to Natural Earth province and territory boundaries before rounding. The 2,275 plottable records without a boundary match appear as **Unassigned**. A separate 207 records have no plottable coordinates and are omitted from the maps. |
+| **July benchmark** | The gauge compares 42,235 July records with the average of 13,738 records per calendar month, pooled across the study years and calculated from records with a known month. |
+| **Area concentration** | The largest 3% of records account for about 96% of pooled recorded area. The agency-by-agency comparison ranges from 59% to over 99%. |
+| **Cause coding** | The donut shows 160,515 records with a known cause and 7,761 with an unknown cause. The source provides no detection confidence score. |
+| **Trust and reconciliation** | The full 2023 source-year count and rounded area match the national table in the 2025 annual report. The narrower analytical total remains **pending National Forestry Database reconciliation**. |
+| **Forest Watch and Carbon Flux** | These pages describe the external forest-change and carbon datasets needed to support those views. |
+
+[Dashboard opening instructions and proposed palette](dashboard/README.md) · [Natural Earth boundary data](https://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-1-states-provinces/) · [Reconciliation notes](docs/reconciliation_report.md)
 
 The Executive Summary layout draws on the [SAS Visual Analytics wildfire dashboard](https://communities.sas.com/t5/SAS-Visual-Analytics-Gallery/Fighting-the-Amazon-forest-fires-with-advanced-analytics/ta-p/784221). The Canadian boundary layer comes from [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/).
 
@@ -36,7 +72,7 @@ Start with the [data quality notebook](notebooks/01_data_quality_and_coverage.ip
 
 I used a fixed reporting-agency scope and excluded Prince Edward Island from the main window because its documented coverage starts later. Reporting agencies and geographic jurisdictions are distinct. The Northwest Territories view reports response classifications and includes unknown classifications in its denominators.
 
-The full 2023 source-year count and area rounded to whole hectares match the 2025 annual report's published national table. The project's narrower scope excludes seven Prince Edward Island records and five Ontario records flagged as prescribed fires for that year. **Jurisdiction-by-year NFD reconciliation is pending.** [Reconciliation notes](docs/reconciliation_report.md)
+The full 2023 source-year count and area rounded to whole hectares match the 2025 annual report's published national table. The project's narrower scope excludes seven Prince Edward Island records and five Ontario records flagged as prescribed fires for that year. **Jurisdiction-by-year National Forestry Database reconciliation is pending.** [Reconciliation notes](docs/reconciliation_report.md)
 
 ## Reproduce the analysis
 

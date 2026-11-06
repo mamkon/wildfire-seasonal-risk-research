@@ -13,3 +13,15 @@ The Executive Summary layout draws on the [SAS Visual Analytics wildfire dashboa
 The Trust page records the comparison with the 2025 annual report. The full 2023 source-year count and rounded area match its published national table. The narrower chart scope still carries the pending NFD reconciliation label. See the [official annual report](https://prod-natural-resources.azure.cloud.nrcan-rncan.gc.ca/forests-forestry/state-canada-forests/state-canada-s-forests-annual-report-2025).
 
 Natural Resources Canada, Canadian Forest Service, Canadian National Fire Database. Contains information licensed under the Open Government Licence – Canada.
+
+## Proposed executive palette
+
+This palette is a design specification for a future report styling pass.
+
+| Colour | Use |
+| --- | --- |
+| Ember Ochre `#C2410C` | Recorded area, the July record count, and the largest-fire area share. |
+| Boreal Forest `#0F382C` | Navigation, baseline comparisons, and mapped boundaries. |
+| White `#FFFFFF` and Light Grey `#F8F9FA` | Canvas and supporting panels. |
+
+Use labels and units alongside colour. The July gauge measures historical record volume, and the map shows recorded fire area by rounded location cell. Use the Trust page for recording and reconciliation caveats.
