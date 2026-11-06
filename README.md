@@ -60,19 +60,33 @@ Agencies record small fires differently. I checked how often each agency records
 
 Open the [Power BI project](dashboard/Canada_Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the project shortcut. Select **Refresh now** if Desktop prompts you to load the embedded summaries. [Build guide](powerbi/BUILD_GUIDE.md)
 
-## Geospatial and semantic model architecture
+## Repository structure
 
 ```text
-dashboard/
-├── Canada_Wildfire.pbip
-├── Canada_Wildfire.Report/
-│   ├── definition.pbir
-│   ├── definition/
-│   └── StaticResources/
-└── Canada_Wildfire.SemanticModel/
-    ├── definition.pbism
-    └── model.bim
+.
+├── dashboard/
+│   ├── Canada_Wildfire.pbip
+│   ├── Canada_Wildfire.Report/
+│   │   ├── definition.pbir
+│   │   ├── definition/              # Pages, visuals, and report.json
+│   │   └── StaticResources/         # Themes and images
+│   └── Canada_Wildfire.SemanticModel/
+│       ├── definition.pbism
+│       └── model.bim                # Local semantic model
+├── modeling/
+│   ├── assets/pipeline_workflow.png # Workflow and held-out scorecard
+│   ├── data.py                      # Cohort checks and year splits
+│   ├── diagram.py                   # Generate the workflow diagram
+│   ├── run.py                       # Train, calibrate, and score held-out years
+│   ├── evaluation.py                # Threshold selection and evaluation metrics
+│   └── results/                     # Evaluation record and aggregate exports
+├── notebooks/                      # Data-quality and historical burden analysis
+├── sql/                            # SQLite warehouse and analysis queries
+├── src/                            # Data preparation and Power BI build scripts
+└── README.md
 ```
+
+## Geospatial and semantic model architecture
 
 The Power BI project shortcut (`.pbip`) opens the report. The report's `definition.pbir` links to the local semantic model using `byPath`. The report's `definition/` folder holds page and visual definitions. The GitHub model stores its Data Analysis Expressions (DAX) measures and Power Query M queries in `model.bim`.
 
