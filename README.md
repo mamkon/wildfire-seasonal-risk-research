@@ -114,12 +114,30 @@ The full 2023 source-year count and area rounded to whole hectares match the 202
 
 ## Reproduce the analysis
 
-Set up Python with `python -m pip install -r requirements.txt`. From the repository root, run these commands in order:
+Run these commands from a terminal with Git and Python 3.12 available.
 
-```text
+```sh
+git clone https://github.com/mamkon/wildfire-seasonal-risk-research.git
+cd wildfire-seasonal-risk-research
+python -m pip install -r requirements.txt -r modeling/requirements.txt
+
+# Prepare the data and build the SQLite warehouse
 python -m src.download_data
 python -m src.prepare_cnfdb
 python -m src.load_warehouse
+
+# Train, calibrate, and evaluate the triage model
+python -m modeling.run --miss-cost 10
+
+# Regenerate the workflow diagram from the evaluation results
+python -m modeling.diagram
+```
+
+If you already have a reviewed SQLite warehouse, skip the three data preparation commands and pass its path with `python -m modeling.run --warehouse PATH_TO_WILDFIRE_DB --miss-cost 10`. The diagram command can also run on its own using the committed evaluation results.
+
+To reproduce the historical analysis and refresh its Power BI exports, continue from the repository root.
+
+```sh
 python -m src.reconcile
 make analysis
 python -m src.export_powerbi
