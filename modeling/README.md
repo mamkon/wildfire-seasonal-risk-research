@@ -80,11 +80,11 @@ Compared with the default cutoff, the main rule missed **1,417 fewer** large fir
 
 ## Reproduce
 
-From the directory containing the local repository, clone it into a separate working copy. If the pinned source archive is already available, place it in the new copy's data folder as described in the [repository instructions](../README.md).
+Clone the repository and install the dependencies. If the pinned source archive is already available, place it in the clone's data folder as described in the [repository instructions](../README.md).
 
 ```sh
-git clone ./wildfire-seasonal-risk-research ./wildfire-triage-review
-cd wildfire-triage-review
+git clone https://github.com/mamkon/wildfire-seasonal-risk-research.git
+cd wildfire-seasonal-risk-research
 python -m pip install -r requirements.txt -r modeling/requirements.txt
 python -m src.download_data
 python -m src.prepare_cnfdb
