@@ -11,7 +11,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROJECT = ROOT.parent / "Canada Wildfire Report"
-NAME = "Canada Wildfire"
+NAME = "Canada_Wildfire"
 REPORT = PROJECT / f"{NAME}.Report"
 MODEL = PROJECT / f"{NAME}.SemanticModel"
 DEFINITION = REPORT / "definition"
@@ -548,7 +548,7 @@ def main():
     write(
         MODEL / "model.bim",
         {
-            "name": NAME,
+            "name": "Canada Wildfire",
             "compatibilityLevel": 1601,
             "model": {
                 "culture": "en-CA",

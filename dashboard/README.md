@@ -1,6 +1,6 @@
 # Canada Wildfire Power BI report
 
-Open `Canada Wildfire.pbip` in Power BI Desktop. Extract the ZIP first and keep the Report and SemanticModel folders beside the project file. If Desktop displays **Refresh now**, select it to load the embedded tables. In Desktop edit mode, Ctrl+click the navigation buttons. The page tabs also open each view.
+Open `Canada_Wildfire.pbip` in Power BI Desktop. Extract the ZIP first and keep the Report and SemanticModel folders beside the project file. If Desktop displays **Refresh now**, select it to load the embedded tables. In Desktop edit mode, Ctrl+click the navigation buttons. The page tabs also open each view.
 
 This review build uses the 2000–2025 CNFDB analysis of 12 reporting agencies. The latest valid report date in scope is December 21, 2025. Cards and gauges draw on the fixed-scope metrics. The July gauge compares the pooled July count with the mean count across all 12 known months. The second gauge shows the pooled area share of the largest 3% of records on a 0–100% scale. The donut shows known and unknown cause coding, since the source supplies no confidence scores.
 

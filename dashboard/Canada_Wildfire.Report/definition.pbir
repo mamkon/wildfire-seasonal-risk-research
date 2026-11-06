@@ -3,7 +3,7 @@
   "version": "4.0",
   "datasetReference": {
     "byPath": {
-      "path": "../Canada Wildfire.SemanticModel"
+      "path": "../Canada_Wildfire.SemanticModel"
     }
   }
 }
