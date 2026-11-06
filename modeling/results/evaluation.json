@@ -1,0 +1,405 @@
+{
+  "study": "Canada wildfire large-fire triage",
+  "warehouse_sha256": "fd79b03aca1d02d55c1cc93d2bc29fa735360dbde999f765af2942c5b71add68",
+  "scikit_learn_version": "1.9.1",
+  "size_threshold_hectares": 200,
+  "miss_cost": 10,
+  "excluded_ambiguous_identity": 1129,
+  "split_profile": {
+    "Training": {
+      "records": 132037,
+      "large_fires": 6446,
+      "positive_share": 0.04881964903776972,
+      "missing_values": {
+        "latitude": 111,
+        "longitude": 111,
+        "month": 3129,
+        "agency": 0
+      },
+      "zero_variance_fields": []
+    },
+    "Threshold calibration": {
+      "records": 16296,
+      "large_fires": 1089,
+      "positive_share": 0.06682621502209131,
+      "missing_values": {
+        "latitude": 13,
+        "longitude": 13,
+        "month": 282,
+        "agency": 0
+      },
+      "zero_variance_fields": []
+    },
+    "Final test": {
+      "records": 18814,
+      "large_fires": 2027,
+      "positive_share": 0.10773891782714999,
+      "missing_values": {
+        "latitude": 81,
+        "longitude": 81,
+        "month": 5,
+        "agency": 0
+      },
+      "zero_variance_fields": []
+    }
+  },
+  "validation": {
+    "Logistic regression": {
+      "forward_folds": [
+        {
+          "validation_years": "2010–2011",
+          "average_precision": 0.23507450567917917,
+          "positive_share": 0.05140738243721557
+        },
+        {
+          "validation_years": "2012–2013",
+          "average_precision": 0.30987885967391327,
+          "positive_share": 0.056227758007117434
+        },
+        {
+          "validation_years": "2014–2015",
+          "average_precision": 0.3303633016619211,
+          "positive_share": 0.07325884230866168
+        },
+        {
+          "validation_years": "2016–2017",
+          "average_precision": 0.3379700116988948,
+          "positive_share": 0.0614628719755261
+        },
+        {
+          "validation_years": "2018–2019",
+          "average_precision": 0.2107984076702568,
+          "positive_share": 0.05563056980826357
+        }
+      ],
+      "forward_mean": 0.28481701727683306,
+      "forward_standard_deviation": 0.05805358044468189,
+      "stratified_folds": [
+        0.26554526672893575,
+        0.26314978595311356,
+        0.2557614185613995,
+        0.264017189224753,
+        0.2740240736762891
+      ],
+      "stratified_mean": 0.26449954682889815,
+      "stratified_standard_deviation": 0.0065234107389336654
+    },
+    "Gradient boosting": {
+      "forward_folds": [
+        {
+          "validation_years": "2010–2011",
+          "average_precision": 0.36944563110031015,
+          "positive_share": 0.05140738243721557
+        },
+        {
+          "validation_years": "2012–2013",
+          "average_precision": 0.45907460221389057,
+          "positive_share": 0.056227758007117434
+        },
+        {
+          "validation_years": "2014–2015",
+          "average_precision": 0.3675425257004531,
+          "positive_share": 0.07325884230866168
+        },
+        {
+          "validation_years": "2016–2017",
+          "average_precision": 0.390481946150188,
+          "positive_share": 0.0614628719755261
+        },
+        {
+          "validation_years": "2018–2019",
+          "average_precision": 0.26064163232583026,
+          "positive_share": 0.05563056980826357
+        }
+      ],
+      "forward_mean": 0.36943726749813444,
+      "forward_standard_deviation": 0.07127027890973826,
+      "stratified_folds": [
+        0.39081732626475474,
+        0.35693892453184645,
+        0.3719677512148069,
+        0.39013682792214727,
+        0.3615164221629962
+      ],
+      "stratified_mean": 0.3742754504193103,
+      "stratified_standard_deviation": 0.015763013356304947
+    }
+  },
+  "model_settings": {
+    "Logistic regression": {
+      "C": 1.0,
+      "max_iter": 400,
+      "random_state": 42
+    },
+    "Gradient boosting": {
+      "max_iter": 120,
+      "max_leaf_nodes": 15,
+      "learning_rate": 0.08,
+      "early_stopping": false,
+      "random_state": 42
+    }
+  },
+  "selected_model": "Gradient boosting",
+  "selected_policy": "Miss cost 10×",
+  "calibration_policies": {
+    "Miss cost 2×": {
+      "threshold": 0.30149950801615144,
+      "records": 16296,
+      "true_negatives": 14885,
+      "false_positives": 322,
+      "false_negatives": 742,
+      "true_positives": 347,
+      "accuracy": 0.9347079037800687,
+      "precision": 0.5186846038863976,
+      "recall": 0.3186409550045914,
+      "specificity": 0.9788255408693365,
+      "f1": 0.39476678043230945,
+      "roc_auc": 0.8681407473710063,
+      "average_precision": 0.3641900693392149,
+      "alert_share": 0.04105301914580265,
+      "cost_units": 7742
+    },
+    "Miss cost 5×": {
+      "threshold": 0.0732512004037921,
+      "records": 16296,
+      "true_negatives": 13637,
+      "false_positives": 1570,
+      "false_negatives": 388,
+      "true_positives": 701,
+      "accuracy": 0.8798478154148257,
+      "precision": 0.3086745926904447,
+      "recall": 0.6437098255280074,
+      "specificity": 0.8967580719405537,
+      "f1": 0.4172619047619048,
+      "roc_auc": 0.8681407473710063,
+      "average_precision": 0.3641900693392149,
+      "alert_share": 0.13935935198821797,
+      "cost_units": 5450
+    },
+    "Miss cost 10×": {
+      "threshold": 0.04246452302097272,
+      "records": 16296,
+      "true_negatives": 12583,
+      "false_positives": 2624,
+      "false_negatives": 263,
+      "true_positives": 826,
+      "accuracy": 0.8228399607265586,
+      "precision": 0.23942028985507247,
+      "recall": 0.758494031221304,
+      "specificity": 0.8274478858420464,
+      "f1": 0.3639568186825292,
+      "roc_auc": 0.8681407473710063,
+      "average_precision": 0.3641900693392149,
+      "alert_share": 0.21170839469808542,
+      "cost_units": 5254
+    },
+    "Miss cost 20×": {
+      "threshold": 0.031382102869073655,
+      "records": 16296,
+      "true_negatives": 11774,
+      "false_positives": 3433,
+      "false_negatives": 210,
+      "true_positives": 879,
+      "accuracy": 0.7764482081492391,
+      "precision": 0.20384972170686455,
+      "recall": 0.8071625344352618,
+      "specificity": 0.7742487012560005,
+      "f1": 0.3254952786521015,
+      "roc_auc": 0.8681407473710063,
+      "average_precision": 0.3641900693392149,
+      "alert_share": 0.2646048109965636,
+      "cost_units": 5533
+    }
+  },
+  "test_prevalence_baseline": {
+    "threshold": 0.5,
+    "records": 18814,
+    "true_negatives": 16787,
+    "false_positives": 0,
+    "false_negatives": 2027,
+    "true_positives": 0,
+    "accuracy": 0.89226108217285,
+    "precision": null,
+    "recall": 0.0,
+    "specificity": 1.0,
+    "f1": 0.0,
+    "roc_auc": 0.5,
+    "average_precision": 0.10773891782714999,
+    "alert_share": 0.0,
+    "cost_units": 20270
+  },
+  "test_policies": {
+    "Default 0.50": {
+      "threshold": 0.5,
+      "records": 18814,
+      "true_negatives": 16742,
+      "false_positives": 45,
+      "false_negatives": 1946,
+      "true_positives": 81,
+      "accuracy": 0.8941745508663761,
+      "precision": 0.6428571428571429,
+      "recall": 0.03996053280710409,
+      "specificity": 0.9973193542622267,
+      "f1": 0.07524384579656293,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 0.006697140427341342,
+      "cost_units": 19505
+    },
+    "Alert every record": {
+      "threshold": 0.0,
+      "records": 18814,
+      "true_negatives": 0,
+      "false_positives": 16787,
+      "false_negatives": 0,
+      "true_positives": 2027,
+      "accuracy": 0.10773891782714999,
+      "precision": 0.10773891782714999,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "f1": 0.19452041648673288,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 1.0,
+      "cost_units": 16787
+    },
+    "Alert no records": {
+      "threshold": 2.0,
+      "records": 18814,
+      "true_negatives": 16787,
+      "false_positives": 0,
+      "false_negatives": 2027,
+      "true_positives": 0,
+      "accuracy": 0.89226108217285,
+      "precision": null,
+      "recall": 0.0,
+      "specificity": 1.0,
+      "f1": 0.0,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 0.0,
+      "cost_units": 20270
+    },
+    "Miss cost 2×": {
+      "threshold": 0.30149950801615144,
+      "records": 18814,
+      "true_negatives": 16333,
+      "false_positives": 454,
+      "false_negatives": 1432,
+      "true_positives": 595,
+      "accuracy": 0.8997555012224939,
+      "precision": 0.567206863679695,
+      "recall": 0.2935372471632955,
+      "specificity": 0.9729552630011318,
+      "f1": 0.38686605981794536,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 0.055756351653024346,
+      "cost_units": 14774
+    },
+    "Miss cost 5×": {
+      "threshold": 0.0732512004037921,
+      "records": 18814,
+      "true_negatives": 14584,
+      "false_positives": 2203,
+      "false_negatives": 749,
+      "true_positives": 1278,
+      "accuracy": 0.84309556713086,
+      "precision": 0.3671358804941109,
+      "recall": 0.6304884065120868,
+      "specificity": 0.8687674986596772,
+      "f1": 0.46405228758169936,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 0.18502179228234295,
+      "cost_units": 9693
+    },
+    "Miss cost 10×": {
+      "threshold": 0.04246452302097272,
+      "records": 18814,
+      "true_negatives": 12994,
+      "false_positives": 3793,
+      "false_negatives": 529,
+      "true_positives": 1498,
+      "accuracy": 0.7702774529605613,
+      "precision": 0.2831222831222831,
+      "recall": 0.7390231869758264,
+      "specificity": 0.7740513492583547,
+      "f1": 0.4094014758130637,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 0.28122674604018283,
+      "cost_units": 9083
+    },
+    "Miss cost 20×": {
+      "threshold": 0.031382102869073655,
+      "records": 18814,
+      "true_negatives": 11855,
+      "false_positives": 4932,
+      "false_negatives": 393,
+      "true_positives": 1634,
+      "accuracy": 0.7169660890825981,
+      "precision": 0.2488577520560463,
+      "recall": 0.8061174148988653,
+      "specificity": 0.7062012271400488,
+      "f1": 0.38030955428837426,
+      "roc_auc": 0.8380167612139318,
+      "average_precision": 0.42686938735161545,
+      "alert_share": 0.3489954289358988,
+      "cost_units": 8862
+    }
+  },
+  "test_by_year": {
+    "2023": {
+      "threshold": 0.04246452302097272,
+      "records": 6820,
+      "true_negatives": 4461,
+      "false_positives": 1394,
+      "false_negatives": 263,
+      "true_positives": 702,
+      "accuracy": 0.7570381231671555,
+      "precision": 0.3349236641221374,
+      "recall": 0.7274611398963731,
+      "specificity": 0.7619128949615713,
+      "f1": 0.4586736360666449,
+      "roc_auc": 0.8247864851351532,
+      "average_precision": 0.5027535613542063,
+      "alert_share": 0.3073313782991202,
+      "cost_units": 4024
+    },
+    "2024": {
+      "threshold": 0.04246452302097272,
+      "records": 5814,
+      "true_negatives": 4019,
+      "false_positives": 1262,
+      "false_negatives": 133,
+      "true_positives": 400,
+      "accuracy": 0.760061919504644,
+      "precision": 0.24067388688327315,
+      "recall": 0.7504690431519699,
+      "specificity": 0.7610301079341034,
+      "f1": 0.36446469248291574,
+      "roc_auc": 0.8400229787624082,
+      "average_precision": 0.36341971813721596,
+      "alert_share": 0.28586171310629516,
+      "cost_units": 2592
+    },
+    "2025": {
+      "threshold": 0.04246452302097272,
+      "records": 6180,
+      "true_negatives": 4514,
+      "false_positives": 1137,
+      "false_negatives": 133,
+      "true_positives": 396,
+      "accuracy": 0.7944983818770227,
+      "precision": 0.2583170254403131,
+      "recall": 0.7485822306238186,
+      "specificity": 0.7987966731551938,
+      "f1": 0.38409311348205627,
+      "roc_auc": 0.8505741493467371,
+      "average_precision": 0.3808542615932553,
+      "alert_share": 0.24805825242718446,
+      "cost_units": 2467
+    }
+  }
+}

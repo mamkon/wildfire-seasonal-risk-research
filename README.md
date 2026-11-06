@@ -4,6 +4,8 @@ I built this project to answer a practical planning question: **when do agencies
 
 ![Annual recorded fire area and the five-year mean](images/annual_burden.png)
 
+**Companion modeling case study** · [Can we flag recorded Canadian wildfires that reach 200 hectares?](modeling/README.md)
+
 ## What I found
 
 | Finding | How I would use it |
