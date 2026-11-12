@@ -5,13 +5,23 @@
 [![scikit-learn gradient boosting](https://img.shields.io/badge/scikit--learn-Gradient_Boosting-f39c12.svg)](modeling/README.md)
 ![Status: retrospective research](https://img.shields.io/badge/Status-Retrospective_Research-357A72.svg)
 
-## Decision summary
+## How many extra reviews would it take to flag one more large fire?
 
-I built this project around two planning questions. **When does recorded workload peak?** July had **3.07×** the average calendar-month record count, a starting point for seasonal staffing discussions. **How concentrated is the area burden?** The largest **3% of records account for 96.2% of pooled recorded area**, with shares ranging from **59% to over 99%** across agencies. That variation matters when reviewing capacity for large events.
+On **18,814 held-out Canadian wildfire records from 2023–2025**, moving from the 10× to the 20× alert rule flagged **136 more large fires** and generated **1,275 more reviews**. That's about **9.4 extra reviews per additional large fire flagged**.
 
-The Power BI project covers **168,276 records from 12 reporting agencies across 2000–2025**, drawn from the Canadian National Fire Database. The companion retrospective model asks whether an already recorded fire eventually reached **200 hectares**. The report describes historical burden. The model tests the trade-off between missed large fires and additional manual reviews.
+| Held-out result | 10× rule | 20× rule |
+| --- | ---: | ---: |
+| Records sent for review | 5,291 | 6,566 |
+| Large fires flagged | 1,498 | 1,634 |
+| Large fires missed | 529 | 393 |
 
-[Open the Power BI project](dashboard/Canada_Wildfire.pbip) · [Read the modeling case study](modeling/README.md) · [View the portfolio page](https://mamkon.github.io/wildfire-triage/)
+A large fire is a record whose final area reached **200 hectares**. The multipliers express how heavily each rule weighs a miss relative to an unnecessary review. The results give teams a historical workload comparison they can weigh against their review capacity.
+
+I also tested a simpler lookup based on past large-fire rates by reporting agency and month. At the same **5,291 reviews**, the lookup flagged **1,334** large fires and the model flagged **1,498**. [Baseline method and results](#agency-by-month-baseline)
+
+[Portfolio case study and audited Power BI screenshots](https://mamkon.github.io/wildfire-triage/) · [Alert rules and evaluation data](modeling/results/test_policies.csv)
+
+The historical analysis covers **168,276 records from 12 reporting agencies across 2000–2025**. This repository includes the [historical research Power BI project](dashboard/README.md), a separate report from the audited dashboard shown in the portfolio.
 
 ## Predictive triage architecture
 
@@ -55,7 +65,7 @@ Agencies record small fires differently. I checked how often each agency records
 | --- | --- |
 | **Python** | Profiled the source data, preserved exclusion flags, independently checked the SQL results, and produced the notebooks and charts. |
 | **Structured Query Language (SQL) / SQLite** | Built the fact and dimension tables and calculated annual totals, seasonal counts, cause shares, and recording checks. |
-| **Power BI Desktop** | Built 13 report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
+| **Power BI Desktop** | The historical research project has 13 report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
 | **Excel** | Packaged summary tables and denominator checks for spreadsheet review. |
 
 Open the [Power BI project](dashboard/Canada_Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the project shortcut. Select **Refresh now** if Desktop prompts you to load the embedded summaries. [Build guide](powerbi/BUILD_GUIDE.md)
