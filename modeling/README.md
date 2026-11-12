@@ -114,7 +114,7 @@ I estimated large-fire rates by reporting agency and month using **2000–2019 r
 
 At 28.12% review coverage, gradient boosting flagged 164 more large fires. The lookup flagged 89% as many. This retrospective comparison sets the review count to the model's observed workload. At the baseline cutoff, 372 records tied for 210 slots. Reporting year and warehouse row key broke ties without using outcomes. A uniform random tie-break would flag about 1,329 large fires on average.
 
-The script calculates average precision from the held-out baseline score groups. The 2× model policy's 0.293537 recall in the policy CSV is a separate calculation. The result records the rebuilt warehouse hash and reads the model benchmark from the committed evaluation.
+The script calculates average precision from the held-out baseline score groups. The 2× model policy's 0.293537 recall in the policy CSV is a separate calculation. The baseline ran on a rebuilt SQLite warehouse (SHA-256 `a04f210a...`), while the model benchmark comes from the original committed evaluation (`fd79b03a...`). The held-out record and large-fire counts agree across builds (18,814 and 2,027); row-level equivalence has not been verified.
 
 ```sh
 python -m modeling.agency_month_baseline --warehouse data/warehouse/wildfire.db --output modeling/results/agency_month_baseline.json
