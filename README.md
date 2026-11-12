@@ -1,17 +1,52 @@
 # Canada Wildfire Intelligence & Large-Fire Triage
 
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-2b5b84.svg)](https://www.python.org/)
-[![Power BI Project](https://img.shields.io/badge/Power_BI-Project-f2c811.svg)](dashboard/README.md)
-[![scikit-learn gradient boosting](https://img.shields.io/badge/scikit--learn-Gradient_Boosting-f39c12.svg)](modeling/README.md)
-![Status: retrospective research](https://img.shields.io/badge/Status-Retrospective_Research-357A72.svg)
+[Python 3.12](https://www.python.org/) · [Power BI Project](dashboard/README.md) · [scikit-learn gradient boosting](modeling/README.md) · [Status: retrospective research](https://img.shields.io/badge/Status-Retrospective_Research-357A72.svg)
 
-## Decision summary
+## How many extra reviews would it take to flag one more large fire?
 
-I built this project around two planning questions. **When does recorded workload peak?** July had **3.07×** the average calendar-month record count, a starting point for seasonal staffing discussions. **How concentrated is the area burden?** The largest **3% of records account for 96.2% of pooled recorded area**, with shares ranging from **59% to over 99%** across agencies. That variation matters when reviewing capacity for large events.
+On 18,814 Canadian wildfire records from 2023–2025, a more sensitive alert rule flagged **136 more fires that reached 200 hectares** and sent **1,275 more records for review**. That is about **9.4 extra reviews for each additional large fire flagged**.
 
-The Power BI project covers **168,276 records from 12 reporting agencies across 2000–2025**, drawn from the Canadian National Fire Database. The companion retrospective model asks whether an already recorded fire eventually reached **200 hectares**. The report describes historical burden. The model tests the trade-off between missed large fires and additional manual reviews.
+A review team can put that number next to its real capacity and decide whether the trade-off is worth it. I built this project to make that decision visible.
 
-[Open the Power BI project](dashboard/Canada_Wildfire.pbip) · [Read the modeling case study](modeling/README.md) · [View the portfolio page](https://mamkon.github.io/wildfire-triage/)
+| On the held-out seasons, 2023–2025 | Main rule (10×) | More sensitive rule (20×) |
+| --- | ---: | ---: |
+| Records sent for review | 5,291 | 6,566 |
+| Large fires flagged | 1,498 | 1,634 |
+| Large fires missed | 529 | 393 |
+
+The main rule flagged about 74 of every 100 large fires and sent 28 of every 100 records for review.
+
+### Does the model beat a simple rule?
+
+I also tested a simple lookup based on large-fire rates by reporting agency and month from 2000–2019. With the same 5,291 reviews, it flagged 1,334 large fires and the model flagged 1,498. The model flagged 164 more, and the lookup flagged 89% as many. Average precision was 0.427 for the model and 0.293 for the lookup.
+
+[Baseline code](modeling/agency_month_baseline.py) · [Baseline results](modeling/results/agency_month_baseline.json)
+
+### How it was built
+
+| Step | Tool | What it does |
+| --- | --- | --- |
+| 1. Prepare | Python | Standardizes 168,276 records from 12 reporting agencies, 2000–2025, and flags problem records without deleting them. |
+| 2. Organize | SQL (SQLite) | Holds the records in a star schema with one fact table of fire records joined to dimensions for agency, cause, size, response and date. |
+| 3. Test | Python (scikit-learn) | Trains on 2000–2019, sets the alert rule on 2020–2022, and tests on 2023–2025, seasons the model never saw. |
+| 4. Decide | Power BI and DAX | Shows what each alert rule would mean for the people doing the reviews. |
+
+[Read the modeling case study](modeling/README.md) · [SQL schema](sql/01_schema.sql) · [Evaluation results](modeling/results/evaluation.json) · [Portfolio case study and audited Power BI screenshots](https://mamkon.github.io/wildfire-triage/)
+
+### Study scope and assumptions
+
+- The evaluation used historical fire records. Live performance remains untested.
+- The archive cannot confirm that the inputs were available at the time an alert would have been issued.
+- Smoke exposure, health outcomes, staffing needs and prevented losses are outside the study.
+- The 10× and 20× labels express assumed penalties for a miss in units of unnecessary reviews.
+- Large fires were 4.9% of training records and 10.8% of test records. Under the 10× cost formula, the 20× rule cost less on the test years (8,862 against 9,083). The study did not test whether the change in large-fire share caused that result.
+
+### Historical findings
+
+The same warehouse answers two planning questions about the 2000–2025 record.
+
+- **When does recorded workload peak?** July had 3.07× the average calendar-month record count.
+- **How concentrated is recorded burned area?** The largest 3% of records account for 96.2% of pooled recorded area, with shares ranging from 59% to over 99% across agencies.
 
 ## Predictive triage architecture
 
@@ -55,7 +90,7 @@ Agencies record small fires differently. I checked how often each agency records
 | --- | --- |
 | **Python** | Profiled the source data, preserved exclusion flags, independently checked the SQL results, and produced the notebooks and charts. |
 | **Structured Query Language (SQL) / SQLite** | Built the fact and dimension tables and calculated annual totals, seasonal counts, cause shares, and recording checks. |
-| **Power BI Desktop** | Built 13 report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
+| **Power BI Desktop** | The historical research project has 13 report pages, including Executive Summary, Concentration, Trust, Change, Cause, and Northwest Territories response classification. |
 | **Excel** | Packaged summary tables and denominator checks for spreadsheet review. |
 
 Open the [Power BI project](dashboard/Canada_Wildfire.pbip) in Desktop after cloning or downloading the repository. Keep the two project folders beside the project shortcut. Select **Refresh now** if Desktop prompts you to load the embedded summaries. [Build guide](powerbi/BUILD_GUIDE.md)
@@ -163,7 +198,7 @@ I estimated large-fire rates by reporting agency and month using **2000–2019 r
 
 At 28.12% review coverage, gradient boosting flagged 164 more large fires. The lookup flagged 89% as many. This retrospective comparison sets the review count to the model's observed workload. At the baseline cutoff, 372 records tied for 210 slots. Reporting year and warehouse row key broke ties without using outcomes. A uniform random tie-break would flag about 1,329 large fires on average.
 
-The script calculates average precision from the held-out baseline score groups. The 2× model policy's 0.293537 recall in the policy CSV is a separate calculation. The result records the rebuilt warehouse hash and reads the model benchmark from the committed evaluation.
+The script calculates average precision from the held-out baseline score groups. The 2× model policy's 0.293537 recall in the policy CSV is a separate calculation. The baseline ran on a rebuilt SQLite warehouse (SHA-256 `a04f210a...`), while the model benchmark comes from the original committed evaluation (`fd79b03a...`). The held-out record and large-fire counts agree across builds (18,814 and 2,027); row-level equivalence has not been verified.
 
 ```sh
 python -m modeling.agency_month_baseline --warehouse data/warehouse/wildfire.db --output modeling/results/agency_month_baseline.json
