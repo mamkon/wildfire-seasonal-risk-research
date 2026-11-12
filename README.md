@@ -1,27 +1,52 @@
 # Canada Wildfire Intelligence & Large-Fire Triage
 
-[![Python 3.12](https://img.shields.io/badge/Python-3.12-2b5b84.svg)](https://www.python.org/)
-[![Power BI Project](https://img.shields.io/badge/Power_BI-Project-f2c811.svg)](dashboard/README.md)
-[![scikit-learn gradient boosting](https://img.shields.io/badge/scikit--learn-Gradient_Boosting-f39c12.svg)](modeling/README.md)
-![Status: retrospective research](https://img.shields.io/badge/Status-Retrospective_Research-357A72.svg)
+[Python 3.12](https://www.python.org/) · [Power BI Project](dashboard/README.md) · [scikit-learn gradient boosting](modeling/README.md) · [Status: retrospective research](https://img.shields.io/badge/Status-Retrospective_Research-357A72.svg)
 
 ## How many extra reviews would it take to flag one more large fire?
 
-On **18,814 held-out Canadian wildfire records from 2023–2025**, moving from the 10× to the 20× alert rule flagged **136 more large fires** and generated **1,275 more reviews**. That's about **9.4 extra reviews per additional large fire flagged**.
+On 18,814 Canadian wildfire records from 2023–2025, a more sensitive alert rule flagged **136 more fires that reached 200 hectares** and sent **1,275 more records for review**. That is about **9.4 extra reviews for each additional large fire flagged**.
 
-| Held-out result | 10× rule | 20× rule |
+A review team can put that number next to its real capacity and decide whether the trade-off is worth it. I built this project to make that decision visible.
+
+| On the held-out seasons, 2023–2025 | Main rule (10×) | More sensitive rule (20×) |
 | --- | ---: | ---: |
 | Records sent for review | 5,291 | 6,566 |
 | Large fires flagged | 1,498 | 1,634 |
 | Large fires missed | 529 | 393 |
 
-A large fire is a record whose final area reached **200 hectares**. The multipliers express how heavily each rule weighs a miss relative to an unnecessary review. The results give teams a historical workload comparison they can weigh against their review capacity.
+The main rule flagged about 74 of every 100 large fires and sent 28 of every 100 records for review.
 
-I also tested a simpler lookup based on past large-fire rates by reporting agency and month. At the same **5,291 reviews**, the lookup flagged **1,334** large fires and the model flagged **1,498**. [Baseline method and results](#agency-by-month-baseline)
+### Does the model beat a simple rule?
 
-[Portfolio case study and audited Power BI screenshots](https://mamkon.github.io/wildfire-triage/) · [Alert rules and evaluation data](modeling/results/test_policies.csv)
+I also tested a simple lookup based on large-fire rates by reporting agency and month from 2000–2019. With the same 5,291 reviews, it flagged 1,334 large fires and the model flagged 1,498. The model flagged 164 more, and the lookup flagged 89% as many. Average precision was 0.427 for the model and 0.293 for the lookup.
 
-The historical analysis covers **168,276 records from 12 reporting agencies across 2000–2025**. This repository includes the [historical research Power BI project](dashboard/README.md), a separate report from the audited dashboard shown in the portfolio.
+[Baseline code](modeling/agency_month_baseline.py) · [Baseline results](modeling/results/agency_month_baseline.json)
+
+### How it was built
+
+| Step | Tool | What it does |
+| --- | --- | --- |
+| 1. Prepare | Python | Standardizes 168,276 records from 12 reporting agencies, 2000–2025, and flags problem records without deleting them. |
+| 2. Organize | SQL (SQLite) | Holds the records in a star schema with one fact table of fire records joined to dimensions for agency, cause, size, response and date. |
+| 3. Test | Python (scikit-learn) | Trains on 2000–2019, sets the alert rule on 2020–2022, and tests on 2023–2025, seasons the model never saw. |
+| 4. Decide | Power BI and DAX | Shows what each alert rule would mean for the people doing the reviews. |
+
+[Read the modeling case study](modeling/README.md) · [SQL schema](sql/01_schema.sql) · [Evaluation results](modeling/results/evaluation.json) · [Portfolio case study and audited Power BI screenshots](https://mamkon.github.io/wildfire-triage/)
+
+### Study scope and assumptions
+
+- The evaluation used historical fire records. Live performance remains untested.
+- The archive cannot confirm that the inputs were available at the time an alert would have been issued.
+- Smoke exposure, health outcomes, staffing needs and prevented losses are outside the study.
+- The 10× and 20× labels express assumed penalties for a miss in units of unnecessary reviews.
+- Large fires were 4.9% of training records and 10.8% of test records. Under the 10× cost formula, the 20× rule cost less on the test years (8,862 against 9,083). The study did not test whether the change in large-fire share caused that result.
+
+### Historical findings
+
+The same warehouse answers two planning questions about the 2000–2025 record.
+
+- **When does recorded workload peak?** July had 3.07× the average calendar-month record count.
+- **How concentrated is recorded burned area?** The largest 3% of records account for 96.2% of pooled recorded area, with shares ranging from 59% to over 99% across agencies.
 
 ## Predictive triage architecture
 
