@@ -102,3 +102,22 @@ Use `--warehouse` with an existing reviewed SQLite database to skip the three da
 - [Source snapshot and licensing notes](../docs/data_sources_and_licences.md)
 - [scikit-learn guidance on preprocessing and leakage](https://scikit-learn.org/stable/common_pitfalls.html)
 - [scikit-learn guidance on decision thresholds](https://scikit-learn.org/stable/modules/classification_threshold.html)
+
+## Agency-by-month baseline
+
+I estimated large-fire rates by reporting agency and month using **2000–2019 records only**. Missing months form a separate group. Unseen combinations fall back to the agency rate, then the overall training rate. The 2023–2025 records were used to score performance.
+
+| Method | Held-out average precision | Reviews | Large fires flagged | Recall |
+| --- | ---: | ---: | ---: | ---: |
+| Agency-by-month lookup | 0.293048 | 5,291 | 1,334 | 65.81% |
+| Gradient boosting, original 10× policy | 0.426869 | 5,291 | 1,498 | 73.90% |
+
+At 28.12% review coverage, gradient boosting flagged 164 more large fires. The lookup flagged 89% as many. This retrospective comparison sets the review count to the model's observed workload. At the baseline cutoff, 372 records tied for 210 slots. Reporting year and warehouse row key broke ties without using outcomes. A uniform random tie-break would flag about 1,329 large fires on average.
+
+The script calculates average precision from the held-out baseline score groups. The 2× model policy's 0.293537 recall in the policy CSV is a separate calculation. The result records the rebuilt warehouse hash and reads the model benchmark from the committed evaluation.
+
+```sh
+python -m modeling.agency_month_baseline --warehouse data/warehouse/wildfire.db --output modeling/results/agency_month_baseline.json
+```
+
+[Baseline script](agency_month_baseline.py) · [Result](results/agency_month_baseline.json)

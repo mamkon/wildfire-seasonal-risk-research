@@ -1,0 +1,26 @@
+{
+  "reviews": 5291,
+  "test_records": 18814,
+  "review_rate": 0.28122674604018283,
+  "cutoff_score": 0.0420267085624509,
+  "rows_above_cutoff": 5081,
+  "large_fires_above_cutoff": 1301,
+  "tied_rows": 372,
+  "tied_large_fires": 50,
+  "tied_rows_selected": 210,
+  "baseline_large_fires": 1334,
+  "expected_baseline_large_fires_random_tie": 1329.225806451613,
+  "model_large_fires": 1498,
+  "tie_break": "Ascending reporting year then warehouse row key, without using outcomes.",
+  "training_years": [
+    2000,
+    2019
+  ],
+  "evaluation_years": [
+    2023,
+    2025
+  ],
+  "warehouse_sha256": "a04f210aa237d19935509bfe9df36716bb135b72aa408c7ab5af02ccb11839af",
+  "baseline_average_precision": 0.29304812381394313,
+  "model_average_precision": 0.42686938735161545
+}
