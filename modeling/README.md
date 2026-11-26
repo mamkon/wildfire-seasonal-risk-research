@@ -71,6 +71,12 @@ For the main scenario I assigned a missed large fire 10 review-cost units and an
 
 Compared with the default cutoff, the main rule missed **1,417 fewer** large fires and added **3,748** extra reviews. The higher-cost scenario caught another **136** large fires at the expense of **1,139** more extra reviews. The held-out results describe these trade-offs. Any new cutoff chosen from this comparison needs a new untouched test window. The alert-all reference had zero misses on the test set and would have sent all 18,814 records for review. This study cannot guarantee zero misses in future seasons.
 
+## How this compares with prior studies
+
+**Stocks et al. (2002).** Using the Canadian Large Fire Database for 1959–1997, the authors found that fires larger than 200 ha were 3.1% of all fires but about 97% of the area burned. This study's 2000–2025 records show a similar pattern: the largest 3% of records account for 96.2% of pooled recorded area. That agreement supports using 200 ha as the large-fire threshold. Two differences limit the comparison. First, the earlier record depends on detection methods that became near-complete only after satellite coverage began in the 1970s, so older counts are less certain. Second, Stocks et al. report that most *area* burned in June and July, driven by northern lightning fires. The 3.07× July figure here counts *records*, not area, so the two results measure different things. Their ecozone framing also separates fire regimes more cleanly than the reporting-agency boundaries used here, which mix reporting practice with fire behaviour.
+
+**Cortez and Morais (2007).** This project began as an exercise on their UCI Forest Fires dataset: 517 fires from one park in northeast Portugal, with burned area predicted from weather inputs. Their best RMSE came from a naive mean predictor, and the strongest model mainly predicted small fires well. With so few records, one region and a heavily skewed target, predicting exact burned area is weakest for the rare large fires that matter most for planning. That result shaped this study's design: a yes/no flag at 200 ha, national records, and evaluation on later seasons the model never saw. This design does not use weather inputs, which Cortez and Morais showed carry signal; adding time-stamped fire-weather data is an open next step.
+
 ## Scope and limitations
 
 - The archive contains fires already recorded by agencies. This design estimates which of those records eventually cross a size threshold. It does not estimate ignition probability or provide a live incident forecast.
@@ -102,6 +108,9 @@ Use `--warehouse` with an existing reviewed SQLite database to skip the three da
 - [Source snapshot and licensing notes](../docs/data_sources_and_licences.md)
 - [scikit-learn guidance on preprocessing and leakage](https://scikit-learn.org/stable/common_pitfalls.html)
 - [scikit-learn guidance on decision thresholds](https://scikit-learn.org/stable/modules/classification_threshold.html)
+
+- Stocks, B. J., Mason, J. A., Todd, J. B., Bosch, E. M., Wotton, B. M., Amiro, B. D., Flannigan, M. D., Hirsch, K. G., Logan, K. A., Martell, D. L., & Skinner, W. R. (2002). Large forest fires in Canada, 1959–1997. *Journal of Geophysical Research, 108*. https://doi.org/10.1029/2001JD000484
+- Cortez, P., & Morais, A. (2007). A data mining approach to predict forest fires using meteorological data. In *New Trends in Artificial Intelligence: Proceedings of the 13th Portuguese Conference on Artificial Intelligence (EPIA 2007)* (pp. 512–523). APPIA. Dataset: [UCI Forest Fires](https://archive.ics.uci.edu/dataset/162/forest+fires)
 
 ## Agency-by-month baseline
 
