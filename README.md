@@ -141,6 +141,12 @@ The Executive Summary layout draws on the [SAS Visual Analytics wildfire dashboa
 
 Start with the [data quality notebook](notebooks/01_data_quality_and_coverage.ipynb), then read the [burden analysis](notebooks/02_burden_patterns.ipynb). The [Excel workbook](Canada_Wildfire_Review.xlsx) provides the main figures in tables.
 
+## How this compares with prior studies
+
+**Stocks et al. (2002).** Using the Canadian Large Fire Database for 1959–1997, the authors found that fires larger than 200 ha were 3.1% of all fires but about 97% of the area burned. This study's 2000–2025 records show a similar pattern: the largest 3% of records account for 96.2% of pooled recorded area. That agreement supports using 200 ha as the large-fire threshold. Two differences limit the comparison. First, the earlier record depends on detection methods that became near-complete only after satellite coverage began in the 1970s, so older counts are less certain. Second, Stocks et al. report that most *area* burned in June and July, driven by northern lightning fires. The 3.07× July figure here counts *records*, not area, so the two results measure different things. Their ecozone framing also separates fire regimes more cleanly than the reporting-agency boundaries used here, which mix reporting practice with fire behaviour.
+
+**Cortez and Morais (2007).** This project began as an exercise on their UCI Forest Fires dataset: 517 fires from one park in northeast Portugal, with burned area predicted from weather inputs. Their best RMSE came from a naive mean predictor, and the strongest model mainly predicted small fires well. With so few records, one region and a heavily skewed target, predicting exact burned area is weakest for the rare large fires that matter most for planning. That result shaped this study's design: a yes/no flag at 200 ha, national records, and evaluation on later seasons the model never saw. This design does not use weather inputs, which Cortez and Morais showed carry signal; adding time-stamped fire-weather data is an open next step.
+
 ## Scope and validation
 
 I used a fixed reporting-agency scope and excluded Prince Edward Island from the main window because its documented coverage starts later. Reporting agencies and geographic jurisdictions are distinct. The Northwest Territories view reports response classifications and includes unknown classifications in its denominators.
@@ -186,6 +192,9 @@ The combined [Colab notebook](notebooks/03_colab_research_review.ipynb) contains
 ## Source and attribution
 
 Canadian Forest Service. *Canadian National Fire Database: Agency Fire Data*. Natural Resources Canada, Canadian Forest Service, Northern Forestry Centre. Contains information licensed under the [Open Government Licence – Canada](https://open.canada.ca/en/open-government-licence-canada). [Source directory](https://cwfis.cfs.nrcan.gc.ca/downloads/nfdb/fire_pnt/current_version/) · [Data and reuse notes](docs/data_sources_and_licences.md)
+
+- Stocks, B. J., Mason, J. A., Todd, J. B., Bosch, E. M., Wotton, B. M., Amiro, B. D., Flannigan, M. D., Hirsch, K. G., Logan, K. A., Martell, D. L., & Skinner, W. R. (2002). Large forest fires in Canada, 1959–1997. *Journal of Geophysical Research, 108*. https://doi.org/10.1029/2001JD000484
+- Cortez, P., & Morais, A. (2007). A data mining approach to predict forest fires using meteorological data. In *New Trends in Artificial Intelligence: Proceedings of the 13th Portuguese Conference on Artificial Intelligence (EPIA 2007)* (pp. 512–523). APPIA. Dataset: [UCI Forest Fires](https://archive.ics.uci.edu/dataset/162/forest+fires)
 
 ## Agency-by-month baseline
 
